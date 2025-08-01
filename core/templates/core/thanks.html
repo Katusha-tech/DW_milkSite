@@ -1,2 +1,23 @@
-<h1>Спасибо</h1>
-<p>Ваша заявка принята</p>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Спасибо за заказ!{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="thanks-card">
+        <h1 class="thanks-title">
+            Спасибо за заказ!
+        </h1>
+        <p class="thanks-text">
+            Коровки готовят молоко для вас.
+        </p>
+        <div class="thanks-image-wrapper">
+            <img src="{% static 'images/cow_relax.png' %}" alt="Спасибо" class="thanks-image">
+        </div>
+        <a href="{% url 'landing' %}" class="btn btn-return-small mt-3">
+            Вернуться
+        </a>
+    </div>
+</div>
+{% endblock %}

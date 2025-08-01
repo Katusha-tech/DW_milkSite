@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Детали заказа{% endblock %}
+
+{% block content %}
+<section class="py-3 zigzag-section main-body">
+    <div class="container-fluid px-4 px-md-5">
+        <!-- Заголовок вне карточки -->
+        <h3 class="text-center fw-bold orders-title mb-4">Заказ №{{ order.id }}</h3>
+
+        <!-- Карточка с деталями -->
+        <div class="thanks-card custom-order-card p-4">
+            <div class="order-details">
+                <p><strong>Клиент:</strong> <span class="client-name">{{ order.client_name }}</span></p>
+                <p><strong>Продукты:</strong></p>
+                <ul class="product-list">
+                    {% for product in order.products %}
+                        <li>{{ product }}</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Дата:</strong> {{ order.date }}</p>
+                <p>
+                    <strong>Статус:</strong>
+                    <span class="badge
+                        {% if order.status == 'новая' %}bg-warning text-dark
+                        {% elif order.status == 'подтвержденная' %}bg-info
+                        {% elif order.status == 'выполненная' %}bg-success
+                        {% elif order.status == 'отмененная' %}bg-danger
+                        {% endif %}">
+                        {{ order.status }}
+                    </span>
+                </p>
+            </div>
+
+            <!-- Кнопка возврата -->
+            <div class="text-center mt-4">
+                <a href="{% url 'orders_list' %}" class="btn btn-return-small">
+                    <i class="bi bi-arrow-left me-1"></i> Назад к списку заказов
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Заказ на вкусности{% endblock %}
+
+{% block content %}
+<section class="py-4 main-body">
+    <div class="container d-flex justify-content-center">
+        <div class="card order-form-card shadow-sm p-4">
+            <h3 class="text-center mb-3 order-form-title">Заказ на вкусности</h3>
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Имя клиента -->
+                <div class="mb-3">
+                    <label for="client_name" class="form-label">Имя клиента</label>
+                    <input type="text" class="form-control form-control-sm" id="client_name" name="client_name" required>
+                </div>
+
+                <!-- Телефон -->
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Телефон</label>
+                    <input type="tel" class="form-control form-control-sm" id="phone" name="phone" required>
+                </div>
+
+                <!-- Продукты -->
+                <div class="mb-3">
+                    <label for="products" class="form-label">Выберите продукты</label>
+                    <select id="products" name="products" class="form-select form-select-sm" multiple required>
+                        {% for product in products %}
+                            <option value="{{ product }}">{{ product }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-text">Вы можете выбрать несколько позиций</div>
+                </div>
+
+                <!-- День привоза -->
+                <div class="mb-3">
+                    <label for="delivery_day" class="form-label">День привоза</label>
+                    <select id="delivery_day" name="delivery_day" class="form-select form-select-sm" required>
+                        <option value="Вторник">Вторник</option>
+                        <option value="Пятница">Пятница</option>
+                    </select>
+                </div>
+
+                <!-- Комментарий -->
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Комментарий</label>
+                    <textarea id="comment" name="comment" class="form-control form-control-sm" rows="3"></textarea>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn order-btn">Заказать</button>
+                    <a href="{% url 'orders_list' %}" class="btn btn-return-small">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

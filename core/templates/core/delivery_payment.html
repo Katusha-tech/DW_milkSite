@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Доставка и Оплата{% endblock %}
+
+{% block content %}
+<section id="delpay" class="py-5 main-body delivery-timeline">
+    <div class="container px-4 px-md-5">
+        <h2 class="text-center fw-bold mb-5 delivery-title">Как оформить заказ</h2>
+
+        <div class="timeline d-flex justify-content-between align-items-start text-center">
+            <!-- Шаг 1 -->
+            <div class="timeline-step">
+                <div class="timeline-icon">
+                    <i class="bi bi-journal-text"></i>
+                </div>
+                <h5 class="fw-bold mt-3">Заказ</h5>
+                <p class="timeline-text">
+                    Заполните заявку, и мы <br>свяжемся с вами для подтверждения.
+                </p>
+            </div>
+
+            <!-- Линия -->
+            <div class="timeline-line"></div>
+
+            <!-- Шаг 2 -->
+            <div class="timeline-step">
+                <div class="timeline-icon">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <h5 class="fw-bold mt-3">Доставка</h5>
+                <p class="timeline-text">
+                    Доставляем два раза в неделю — <br>по <strong>вторникам</strong> и <strong>пятницам</strong>. <br>
+                    Забрать заказ можно по адресу: <br> г. Пенза, ул. Луговая, на углу дома 7.
+                </p>
+            </div>
+
+            <!-- Линия -->
+            <div class="timeline-line"></div>
+
+            <!-- Шаг 3 -->
+            <div class="timeline-step">
+                <div class="timeline-icon">
+                    <i class="bi bi-credit-card"></i>
+                </div>
+                <h5 class="fw-bold mt-3">Оплата</h5>
+                <p class="timeline-text">
+                    Оплатить можно картой<br> через терминал или наличными.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

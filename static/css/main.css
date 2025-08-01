@@ -1,0 +1,441 @@
+/* Общие стили */
+.main-body {
+    background-color: #FFFFFF;
+    color: #265475;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Навигация */
+.nav-main {
+    background-color: #FFFFFF;
+}
+
+.nav-text {
+    color: #265475;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.nav-text:hover {
+    color: #1b3b59;
+    cursor: default;
+}
+
+.company-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.2rem;
+    color: #265475;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.ampersand {
+    font-size: 1.4rem;
+    color: grey;
+}
+
+.company-tagline {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #265475;
+}
+
+/* Основной контент */
+.about-section {
+    padding: 60px 0;
+    color: #265475;
+}
+
+.text-column {
+    padding-top: 40px;
+}
+
+.about-title {
+    font-size: 2rem;
+    border-left: 4px solid #265475;
+    padding-left: 15px;
+    font-weight: 700;
+}
+
+.company-highlight {
+    font-weight: 700;
+}
+
+.order-btn {
+    background-color: #265475;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+    border: none;
+}
+
+.order-btn:hover {
+    background-color: #1b3b59;
+}
+
+.features-list {
+    margin-top: 20px;
+    font-weight: 700;
+    color: #265475;
+}
+
+.about-image {
+    max-height: 350px;
+}
+
+.bg-light-yellow {
+    background-color: #FFF8E7;
+}
+
+.rounded-20 {
+    border-radius: 20px;
+}
+
+.text-success {
+    color: #4CAF50 !important;
+}
+
+.text-muted {
+    color: #555 !important;
+}
+
+/* Шрифты (если нужно подключить отдельные классы) */
+.montserrat-font {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.open-sans-font {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.btn-return {
+    background-color: #A3D9FF;
+    border: none;
+    color: #131313;
+    transition: background-color 0.3s ease;
+}
+
+.btn-return:hover {
+    background-color: #7bbce0;
+    color: #131313;
+}
+
+
+/* Карточка спасибо */
+.thanks-card {
+    max-width: 520px;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 1.5rem 1.5rem; /* p-4 ~ 1.5rem */
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); /* bootstrap shadow */
+    margin: 0 auto;
+}
+
+.thanks-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #265475;
+    margin-bottom: 0.3rem; /* уменьшил для плотности */
+}
+
+.thanks-text {
+    font-family: 'Montserrat', sans-serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: #265475;
+    margin-bottom: 1rem; /* оставил отступ под текст для разделения с изображением */
+}
+
+/* Контейнер для изображения */
+.thanks-image-wrapper {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.thanks-image {
+    max-height: 160px;
+}
+
+/* Кнопка возврата */
+.btn-return-small {
+    background-color: #265475;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 15px;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    border: none;
+    transition: background-color 0.3s;
+    display: inline-block;
+    min-width: 70px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-return-small:hover {
+    background-color: #1b3b59;
+    color: white;
+}
+
+.company-name {
+    color: #265475 !important; /* фирменный цвет */
+    font-family: 'Montserrat', sans-serif;
+}
+
+.order-btn {
+    background-color: #265475;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px; /* чуть меньше */
+    margin-top: 0;
+    transition: background-color 0.3s;
+    border: none;
+}
+
+.order-btn:hover {
+    background-color: #1b3b59;
+}
+
+.zigzag-section {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.custom-order-card {
+    border: 2px solid #265475;      /* Обводка фирменным синим цветом */
+    border-radius: 15px;            /* Закругление углов */
+    max-width: 280px;
+    margin: auto;
+    box-shadow: 0 2px 6px rgba(38, 84, 117, 0.15); /* Немного тени для объёма */
+    transition: box-shadow 0.3s ease;
+}
+
+.custom-order-card:hover {
+    box-shadow: 0 6px 15px rgba(38, 84, 117, 0.3);
+}
+
+.custom-card-body {
+    padding: 1rem;
+    font-size: 0.85rem;             /* Уменьшенный размер шрифта для всего тела карточки */
+    color: #265475;                 /* Цвет текста — фирменный синий */
+}
+
+.custom-card-title {
+    color: #1b3b59;                /* Более тёмный оттенок синего для имени */
+    font-size: 1.2rem;             /* Можно чуть увеличить имя */
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.custom-card-text {
+    font-size: 0.85rem;             /* Общий уменьшенный размер текста */
+}
+
+.custom-btn {
+    padding: 6px 15px;
+    font-size: 0.85rem;
+    border-radius: 8px;
+    border: 2px solid #265475;
+    color: #265475;
+    background-color: transparent;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.custom-btn:hover {
+    background-color: #265475;
+    color: white;
+}
+/* Заголовок Журнал заявок */
+.orders-title {
+    font-size: 1.5rem; /* уменьшенный размер */
+    color: #265475; /* фирменный цвет */
+    margin-bottom: 1rem;
+}
+
+/* Поисковая форма */
+.search-form {
+    gap: 0.5rem;
+    font-size: 0.9rem; /* уменьшенный размер шрифта */
+}
+
+/* Поле поиска */
+.search-input {
+    font-size: 0.9rem;
+    max-width: 220px; /* укорачиваем поле */
+    height: 32px;
+}
+
+/* Кнопка поиска */
+.search-btn {
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    background-color: #265475;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+.search-btn:hover {
+    background-color: #1b3b59;
+}
+
+/* Чекбоксы */
+.search-checkbox label {
+    font-size: 0.8rem;
+}
+
+/* Всего заказов */
+.orders-count {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.about-milk-section {
+    background-color: #fff;
+}
+
+.about-milk-content {
+    max-width: 1100px;
+}
+
+.about-milk-text {
+    text-align: justify;
+    color: #265475;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.about-milk-banner {
+    gap: 1rem;
+}
+
+.about-milk-item {
+    flex: 1 1 22%;
+    min-width: 150px;
+}
+
+.about-milk-icon {
+    font-size: 2.5rem;
+    color: #265475;
+}
+
+.about-milk-icon-text {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #265475;
+}
+
+.delivery-title {
+    font-size: 1.6rem;
+    color: #265475;
+}
+
+.timeline {
+    position: relative;
+}
+
+.timeline-step {
+    flex: 1;
+    max-width: 30%;
+    position: relative;
+}
+
+.timeline-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #265475;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 2rem;
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+}
+
+.timeline-step:hover .timeline-icon {
+    transform: scale(1.1);
+}
+
+.timeline-line {
+    flex: 0 0 5%;
+    height: 3px;
+    background-color: #265475;
+    margin-top: 35px;
+}
+
+.timeline-text {
+    font-size: 0.9rem;
+    color: #265475;
+    margin-top: 0.5rem;
+}
+
+.order-form {
+    max-width: 600px;
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    color: #265475;
+    font-size: 1.8rem;
+}
+
+.btn-custom {
+    min-width: 140px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary.btn-custom {
+    background-color: #265475;
+    border: none;
+}
+
+.btn-primary.btn-custom:hover {
+    background-color: #1b3c58;
+}
+
+.btn-secondary.btn-custom {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary.btn-custom:hover {
+    background-color: #5a6268;
+}
+
+
+.features-list {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+  align-items: center;
+}
+
+.features-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feature-icon {
+  width: 90px;
+  height: 80px;
+}
+

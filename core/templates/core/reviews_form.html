@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Оставить отзыв{% endblock %}
+
+{% block content %}
+<section class="py-3 zigzag-section main-body">
+    <div class="container-fluid px-4 px-md-5">
+        <h2 class="text-center fw-bold mb-4 orders-title">Оставить отзыв</h2>
+
+        <div class="card custom-order-card p-4 mx-auto" style="max-width: 500px;">
+            <form method="post" class="d-flex flex-column gap-3">
+                {% csrf_token %}
+
+                <div>
+                    <label for="id_client_name" class="form-label fw-bold" style="color: #265475;">Имя</label>
+                    <input 
+                        type="text" 
+                        class="form-control form-control-sm" 
+                        id="id_client_name" 
+                        name="client_name" 
+                        placeholder="Введите ваше имя"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label for="id_phone" class="form-label fw-bold" style="color: #265475;">Номер телефона</label>
+                    <input 
+                        type="tel" 
+                        class="form-control form-control-sm" 
+                        id="id_phone" 
+                        name="phone" 
+                        placeholder="+7 (___) ___-__-__"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label for="id_text" class="form-label fw-bold" style="color: #265475;">Текст отзыва</label>
+                    <textarea 
+                        class="form-control form-control-sm" 
+                        id="id_text" 
+                        name="text" 
+                        rows="4" 
+                        placeholder="Напишите свой отзыв..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn order-btn">Опубликовать отзыв</button>
+                    <a href="{% url 'landing' %}" class="btn btn-return-small">
+                        <i class="bi bi-arrow-left me-1"></i> Отмена
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

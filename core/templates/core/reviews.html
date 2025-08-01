@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Отзывы{% endblock %}
+
+{% block content %}
+<section id="reviews" class="py-3 zigzag-section main-body">
+    <div class="container-fluid px-4 px-md-5">
+        <h2 class="text-center fw-bold mb-4 orders-title">Отзывы клиентов</h2>
+
+        <div class="row row-cols-1 row-cols-md-2 g-3">
+            {% for review in reviews %}
+            <div class="col">
+                <div class="card custom-order-card h-100">
+                    <div class="card-body custom-card-body">
+                        <h5 class="card-title fw-bold custom-card-title">{{ review.client_name }}</h5>
+                        <p class="card-text custom-card-text">{{ review.text }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center">Пока нет отзывов.</p>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'create_review' %}" class="btn order-btn">Оставить отзыв</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

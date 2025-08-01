@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Наши продукты{% endblock %}
+
+{% block content %}
+<section id="products" class="py-3 zigzag-section main-body">
+    <div class="container-fluid px-4 px-md-5">
+        <h2 class="text-center fw-bold orders-title mb-4">Наши продукты</h2>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+            {% for product in products %}
+            <div class="col">
+                <div class="card custom-order-card h-100">
+                    <!-- Фото продукта -->
+                    <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}" style="max-height: 160px; object-fit: cover; border-bottom: 1px solid #265475;">
+                    
+                    <div class="card-body custom-card-body">
+                        <h5 class="card-title fw-bold custom-card-title">{{ product.name }}</h5>
+                        <p class="card-text mb-2 custom-card-text">
+                            {{ product.description }}
+                        </p>
+                        <p class="card-text fw-bold custom-card-text">
+                            Цена: {{ product.price }} ₽
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
