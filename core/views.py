@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from  django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import Order
 from .forms import ReviewForm
 from .data import * 
 
@@ -14,17 +16,19 @@ def landing(request):
 def thanks(request):
     return render(request, 'core/thanks.html')
 
+
+@login_required
 def orders_list(request):
+    orders = Order.objects.all()
     context = {
         'orders': ORDERS, 'title': 'Список заказов'
     }
     return render(request, 'core/orders_list.html', context)
 
+
+@login_required
 def order_detail(request, order_id: int):
-    try:
-        order = [o for o in ORDERS if o['id'] == order_id][0]
-    except IndexError:
-        return HttpResponse(status=404)
+    order = get_object_or_404(Order, id=order_id)
     context = {'title': f'Заказ №{order_id}', 'order': order}
     return render(request, 'core/order_detail.html', context)
 

@@ -23,3 +23,20 @@ class Review(models.Model):
             models.Index(fields=['is_published']),
         ]
 
+class Order(models.Model):
+
+    STATUS_CHOICES = [
+        ("new", "новая"),
+        ("confirmed", "подтвержденная"),
+        ("cancelled", "отмененная"),
+        ("completed", "выполненная"),
+    ]
+
+    client_name = models.CharField(max_length=100)
+    products = models.CharField(max_length=200)
+    phone = models.CharField()
+    date_create = models.DateTimeField(auto_now_add=True, default=None)
+    date_update = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="new")
+
+
