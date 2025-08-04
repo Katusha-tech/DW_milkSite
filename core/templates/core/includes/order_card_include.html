@@ -3,17 +3,18 @@
         <div class="card-body d-flex flex-column custom-card-body">
             <h5 class="card-title fw-bold custom-card-title">{{ order.client_name }}</h5>
             <p class="card-text mb-1 custom-card-text"><strong>Номер телефона: </strong> {{ order.phone }} </p>
-            <p class="card-text mb-1 custom-card-text"><strong>Дата: </strong> {{ order.date }}</p>
+            <p class="card-text mb-1 custom-card-text"><strong>Дата: </strong> {{ order.appointment_date|date:"d.m.Y H:i" }}</p>
             <p class="card-text mb-1 custom-card-text"><strong>Продукция: </strong>
-                {{ order.products|join:", " }}
+                {% for item in order.items.all %}
+                {{ item.product.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
             </p>
             <p class="card-text mb-3 custom-card-text">
                 <strong>Статус:</strong>
-                <span class="badge
-                    {% if order.status == 'новая' %}bg-warning text-dark
-                    {% elif order.status == 'подтвержденная' %}bg-info
-                    {% elif order.status == 'выполненная' %}bg-success
-                    {% elif order.status == 'отмененная' %}bg-danger
+                <span class="badge {% if order.status == 'new' %}bg-warning text-dark
+                    {% elif order.status == 'confirmed' %}bg-info
+                    {% elif order.status == 'completed' %}bg-success
+                    {% elif order.status == 'cancelled' %}bg-danger
                     {% endif %}">
                     {{ order.get_status_display }}
                 </span>

@@ -1,41 +1,60 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Детали заказа{% endblock %}
 
 {% block content %}
 <section class="py-3 zigzag-section main-body">
     <div class="container-fluid px-4 px-md-5">
-        <!-- Заголовок вне карточки -->
-        <h3 class="text-center fw-bold orders-title mb-4">Заказ №{{ order.id }}</h3>
 
-        <!-- Карточка с деталями -->
-        <div class="thanks-card custom-order-card p-4">
-            <div class="order-details">
-                <p><strong>Клиент:</strong> <span class="client-name">{{ order.client_name }}</span></p>
-                <p><strong>Продукты:</strong></p>
-                <ul class="product-list">
-                    {% for product in order.products.all %}
-                        <li>{{ product }}</li>
-                    {% endfor %}
-                </ul>
-                <p><strong>Дата:</strong> {{ order.date }}</p>
-                <p>
-                    <strong>Статус:</strong>
-                    <span class="badge
-                        {% if order.status == 'новая' %}bg-warning text-dark
-                        {% elif order.status == 'подтвержденная' %}bg-info
-                        {% elif order.status == 'выполненная' %}bg-success
-                        {% elif order.status == 'отмененная' %}bg-danger
-                        {% endif %}">
-                        {{ order.get_status_display }}
-                    </span>
-                </p>
-            </div>
+        <!-- Кнопка возврата -->
+        <div class="mb-3">
+            <a href="{% url 'orders_list' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Назад к списку заказов
+            </a>
+        </div>
 
-            <!-- Кнопка возврата -->
-            <div class="text-center mt-4">
-                <a href="{% url 'orders_list' %}" class="btn btn-return-small">
-                    <i class="bi bi-arrow-left me-1"></i> Назад к списку заказов
-                </a>
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <h3 class="text-center fw-bold orders-title mb-4">Заказ №{{ order.id }}</h3>
+                <div class="thanks-card custom-order-card p-4 shadow-sm">
+                    <div class="order-details">
+                        <p><strong>Клиент:</strong> <span class="client-name">{{ order.client_name }}</span></p>
+                        <p><strong>Телефон:</strong> {{ order.phone }}</p>
+                        <p><strong>Продукты:</strong></p>
+                        <ul class="product-list">
+                            {% for item in order.items.all %}
+                                <li>{{ item.product.name }} — {{ item.quantity }} шт.</li>
+                            {% endfor %}
+                        </ul>
+                        <p><strong>Комментарий:</strong> {{ order.comment }}</p>
+                        <p><strong>Дата:</strong> {{ order.appointment_date|date:"d.m.Y H:i" }}</p>
+                        <p><strong>Статус:</strong>
+                            <span class="badge {% if order.status == 'new' %}bg-warning text-dark
+                                {% elif order.status == 'confirmed' %}bg-info
+                                {% elif order.status == 'completed' %}bg-success
+                                {% elif order.status == 'cancelled' %}bg-danger
+                                {% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </p>
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <form method="post" action="{% url 'order_confirm' order.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm" style="background-color: #265475; color: white;">
+                                Подтвердить
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'order_cancel' order.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm" style="background-color: #6c757d; color: white;">
+                                Отменить
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

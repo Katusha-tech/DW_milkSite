@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from  django.shortcuts import get_object_or_404
+from  django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Order
+from .models import Order, Product
 from .forms import ReviewForm
 from django.db.models import Q
 from .data import * 
@@ -69,9 +69,28 @@ def order_detail(request, order_id: int):
     context = {'title': f'Заказ №{order_id}', 'order': order}
     return render(request, 'core/order_detail.html', context)
 
+@login_required
+def order_confirm(request, order_id):
+    """Логика подтверждения заказа"""
+    order = get_object_or_404(Order, pk=order_id)
+    if request.method == 'POST':
+        order.status = 'confirmed'  # или 'confirmed' — зависит от твоей модели
+        order.save()
+    return redirect('order_detail', order_id=order.id)
+
+@login_required
+def order_cancel(request, order_id):
+    """Логика отмены заказа"""
+    order = get_object_or_404(Order, pk=order_id)
+    if request.method == 'POST':
+        order.status = 'cancelled'  # или 'cancelled'
+        order.save()
+    return redirect('order_detail', order_id=order.id)
+
 def products(request):
+    products = Product.objects.all()
     context = {
-        'products': PRODUCTS, 'title': 'Продукты'
+        'products': products
     }
     return render(request, 'core/products.html', context)
 
