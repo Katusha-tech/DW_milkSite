@@ -15,7 +15,7 @@
                     {% elif order.status == 'выполненная' %}bg-success
                     {% elif order.status == 'отмененная' %}bg-danger
                     {% endif %}">
-                    {{ order.status }}
+                    {{ order.get_status_display }}
                 </span>
             </p>
             <div class="text-center mt-auto">

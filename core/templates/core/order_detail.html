@@ -13,7 +13,7 @@
                 <p><strong>Клиент:</strong> <span class="client-name">{{ order.client_name }}</span></p>
                 <p><strong>Продукты:</strong></p>
                 <ul class="product-list">
-                    {% for product in order.products %}
+                    {% for product in order.products.all %}
                         <li>{{ product }}</li>
                     {% endfor %}
                 </ul>
@@ -26,7 +26,7 @@
                         {% elif order.status == 'выполненная' %}bg-success
                         {% elif order.status == 'отмененная' %}bg-danger
                         {% endif %}">
-                        {{ order.status }}
+                        {{ order.get_status_display }}
                     </span>
                 </p>
             </div>

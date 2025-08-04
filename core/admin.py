@@ -16,12 +16,16 @@ class OrderItemInline(admin.TabularInline):
 # Настройка Order с отображением OrderItem
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'client_name', 'phone', 'status', 'date_create']
-    list_filter = ['status', 'date_create']
+    list_display = ['id', 'client_name', 'phone', 'status', 'date_created']
+    list_filter = ['status', 'date_created']
     search_fields = ['client_name', 'phone']
     inlines = [OrderItemInline]
 
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'price', 'is_popular']
+    search_fields = ['name']
+
 # Остальные модели
 admin.site.register(Review)
-admin.site.register(Product)
 
