@@ -2,49 +2,43 @@
 {% load static %}
 {% block content %}
 
-
-
 <section id="main" class="about-section">
   <div class="container">
     <div class="row align-items-center">
-
-      <!-- Левая колонка: текст + иконки внизу -->
-      <div class="col-md-6 text-column">
-        <h2 class="about-title">
+      {% comment %} Левая колонка: текст + иконки внизу {% endcomment%}
+      <div class="col-md-5 offset-md-1 text-column">
+        <h2 class="about-title"> 
           Как у бабушки,<br> только от <strong class="company-highlight">МОЛОКО<span class="ampersand">&</span>ДОМ</strong>
         </h2>
         <p>Натуральное молочко прямо из‑под коровы, с сохранением всех живых и полезных компонентов.</p>
         <p>Доставка домашних молочных продуктов для всей семьи. Мы предлагаем свежие и натуральные продукты с нашей фермы.</p>
 
-        <!-- Кнопка заказа -->
+        {% comment %}Кнопка заказа {% endcomment %}
         <button class="order-btn">Сделать заказ на молочко</button>
 
-        <!-- Горизонтальный список с иконками -->
+        {% comment %} Горизонтальный список с иконками {% endcomment %}
         <ul class="features-list">
-  <li>
-    <img src="{% static 'images/icons/milked.png' %}" alt="Подоили" class="feature-icon">
-    <span><strong>Подоили</strong></span>
-  </li>
-  <li>
-    <img src="{% static 'images/icons/bottled.png' %}" alt="Разлили" class="feature-icon">
-    <span><strong>Разлили</strong></span>
-  </li>
-  <li>
-    <img src="{% static 'images/icons/delivered.png' %}" alt="Привезли" class="feature-icon">
-    <span><strong>Привезли</strong></span>
-  </li>
-</ul>
-</div>
-
-
-      <!-- Правая колонка: изображение -->
-      <div class="col-md-6 text-center">
-        <img src="{% static 'images/milk_placeholder.jpg' %}" alt="Изображение компании" class="img-fluid rounded about-image">
+          <li>
+            <img src="{% static 'images/icons/milked.png' %}" alt="Подоили" class="feature-icon">
+            <span><strong>Подоили</strong></span>
+          </li>
+          <li>
+            <img src="{% static 'images/icons/bottled.png' %}" alt="Разлили" class="feature-icon">
+            <span><strong>Разлили</strong></span>
+          </li>
+          <li>
+            <img src="{% static 'images/icons/delivered.png' %}" alt="Привезли" class="feature-icon">
+            <span><strong>Привезли</strong></span>
+          </li>
+        </ul>
       </div>
 
+
+      {% comment %} Правая колонка: изображение {% endcomment %}
+      <div class="col-md-6 text-center">
+        <img src="{% static 'images/banner.png' %}" alt="Изображение компании" class="img-fluid about-image">
+      </div>
     </div>
   </div>
 </section>
-
-
 {% endblock content %}
