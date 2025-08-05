@@ -5,6 +5,48 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+/* Название для секций - done */
+.milksite-title {
+    font-size:1.6rem;
+    color: #265475;
+}
+
+/* Класс-обертка для шагов в шаблонах about_milk, delivery_payment - done*/
+.am_dp-step {
+    flex: 1;
+    max-width: 30%;
+    position: relative;
+}
+
+/* Класс-обертка для иконки в шаблонах about_milk, delivery_payment - done */
+.am_dp-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 2rem;
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+}
+
+/* Движение иконки при наведении в шаблонах about_milk, delivery_payment - done*/
+.am_dp-step:hover .am_dp-icon-wrapper {
+    transform: scale(1.1);
+}
+
+/* Класс-обертка для текста в шаблонах about_milk, delivery_payment - done*/
+.am_dp-text {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    color: #265475;
+}
+
+
+
 /* Навигация */
 .nav-main {
     background-color: #FFFFFF;
@@ -260,11 +302,7 @@
     color: white;
 }
 /* Заголовок Журнал заявок */
-.orders-title {
-    font-size: 1.5rem; /* уменьшенный размер */
-    color: #265475; /* фирменный цвет */
-    margin-bottom: 1rem;
-}
+
 
 /* Поисковая форма */
 .search-form {
@@ -304,10 +342,7 @@
     margin-bottom: 1rem;
 }
 
-.about-milk-section {
-    background-color: #fff;
-}
-
+/* Классы для шаблона about_milk -done*/
 .about-milk-content {
     max-width: 1100px;
 }
@@ -319,71 +354,20 @@
     line-height: 1.6;
 }
 
-.about-milk-banner {
-    gap: 1rem;
-}
 
-.about-milk-item {
-    flex: 1 1 22%;
-    min-width: 150px;
-}
-
-.about-milk-icon {
-    font-size: 2.5rem;
-    color: #265475;
-}
-
-.about-milk-icon-text {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #265475;
-}
-
-.delivery-title {
-    font-size: 1.6rem;
-    color: #265475;
-}
-
+/* Классы для шаблона delivery_payment - done*/
 .timeline {
     position: relative;
-}
-
-.timeline-step {
-    flex: 1;
-    max-width: 30%;
-    position: relative;
-}
-
-.timeline-icon {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: #265475;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 2rem;
-    margin: 0 auto;
-    transition: transform 0.3s ease;
-}
-
-.timeline-step:hover .timeline-icon {
-    transform: scale(1.1);
 }
 
 .timeline-line {
     flex: 0 0 5%;
     height: 3px;
-    background-color: #265475;
+    background-color: #dc3545;
     margin-top: 35px;
 }
 
-.timeline-text {
-    font-size: 0.9rem;
-    color: #265475;
-    margin-top: 0.5rem;
-}
+
 
 .order-form {
     max-width: 600px;
@@ -490,3 +474,5 @@
     font-weight: 600;
     margin-bottom: 0.5rem;
 }
+
+/*Иконки для секции about_milk*/

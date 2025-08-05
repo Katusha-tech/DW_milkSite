@@ -1,9 +1,10 @@
 {% extends "base.html" %}
-{% block content %}
 {% block title %}Список заказов{% endblock %}
-<section id="orders" class="py-3 zigzag-section main-body">
-    <div class="container-fluid px-4 px-md-5">
-        <h2 class="text-center fw-bold mb-4 orders-title">Журнал Заявок</h2>
+
+{% block content %}
+<section id="orders" class="py-3 main-body">
+    <div class="container px-4 px-md-5">
+        <h2 class="text-center fw-bold mb-5 milksite-title">Журнал Заявок</h2>
         {% comment %} Форма поиска {% endcomment %}
         <form class="mb-3">
             <div class="row g-2">
