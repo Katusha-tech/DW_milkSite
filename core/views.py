@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from  django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Order, Product
+from .models import Order, Product, Review
 from .forms import ReviewForm
 from django.db.models import Q
 from .data import * 
@@ -95,7 +95,11 @@ def products(request):
     return render(request, 'core/products.html', context)
 
 def reviews(request):
-    return render(request, 'core/reviews.html')
+    reviews = Review.objects.filter(is_published=True).order_by('-created_at')
+    context = {
+        'reviews': reviews,
+    }
+    return render(request, 'core/reviews.html', context)
 
 def about_milk(request):
     return render(request, 'core/about_milk.html')
@@ -107,15 +111,13 @@ def delivery_payment(request):
 def create_review(request):
     if request.method == 'GET':
         form = ReviewForm()
-        
-
         context = {
             'title': 'Создание отзыва',
             'form': form,
             'button_text': 'Создать',
         }
         return render(request, 'core/reviews_form.html', context)
-    
+
     if request.method == 'POST':
         form = ReviewForm(request.POST, request.FILES)
 
@@ -128,4 +130,11 @@ def create_review(request):
             messages.success(request, f"Отзыв от {client_name} успешно создан и отправлен на модерацию!")
 
             return redirect("thanks")
-
+        else:
+            # Форма не прошла валидацию — нужно вернуть шаблон с ошибками
+            context = {
+                'title': 'Создание отзыва',
+                'form': form,
+                'button_text': 'Создать',
+            }
+            return render(request, 'core/reviews_form.html', context)

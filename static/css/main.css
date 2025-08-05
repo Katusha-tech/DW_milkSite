@@ -475,4 +475,67 @@
     margin-bottom: 0.5rem;
 }
 
-/*Иконки для секции about_milk*/
+/* Цвет меток */
+.label-color {
+    color: #265475;
+}
+
+/* Стили звёзд без кнопочной рамки */
+.star-btn {
+    border: none;
+    background: none;
+    font-size: 1.8rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.star-btn:hover,
+.star-btn:focus {
+    transform: scale(1.2);
+    outline: none;
+}
+
+/* Подсвеченные звёзды (JS добавит класс text-warning) */
+.star-btn.text-warning {
+    color: #f5c518; /* классический жёлтый */
+}
+
+.star-btn.text-muted {
+    color: #ccc;
+}
+
+/* Фирменный стиль отзывов */
+
+.review-card {
+  max-width: 600px;
+  width: 100%;
+  border: 1px solid #265475;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  padding: 1.5rem;
+}
+
+.review-card .card-title {
+  color: #265475;
+  font-weight: 600;
+}
+
+.review-card .card-text {
+  font-style: italic;
+}
+
+.star-rating i {
+  font-size: 1.2rem;
+  color: #f4c150;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: #265475;
+  border-radius: 30%;
+  padding: 0.75rem;
+}
