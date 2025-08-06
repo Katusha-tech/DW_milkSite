@@ -1,7 +1,7 @@
 # core/urls.py
 from django.contrib import admin
 from django.urls import path
-from .views import thanks, orders_list, order_detail, order_confirm, order_cancel, products,reviews, create_review, about_milk, delivery_payment
+from .views import thanks, orders_list, order_detail, order_confirm, order_cancel, products,reviews, create_review, create_order, about_milk, delivery_payment
 
 # Маршруты доступны с префиксом /milksite/
 urlpatterns = [
@@ -12,7 +12,8 @@ urlpatterns = [
     path('orders/<int:order_id>/cancel/', order_cancel, name='order_cancel'),
     path('products/', products, name='products'),
     path('reviews/', reviews, name='reviews'),
-    path('create_review/', create_review, name='create_review'), 
+    path('create_review/', create_review, name='create_review'),
+    path('create_order/', create_order, name='create_order'),
     path('about_milk/', about_milk, name='about_milk'),
     path('delivery_payment/', delivery_payment, name='delivery_payment'),
 ] 

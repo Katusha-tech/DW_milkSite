@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from  django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Order, Product, Review
-from .forms import ReviewForm
+from .models import Order, Product, Review, OrderItem
+from .forms import ReviewForm, OrderForm
 from django.db.models import Q
 from .data import * 
 
@@ -138,3 +138,27 @@ def create_review(request):
                 'button_text': 'Создать',
             }
             return render(request, 'core/reviews_form.html', context)
+        
+
+def create_order(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+
+        if form.is_valid():
+            products = form.cleaned_data.pop('products')  # Удалим продукты до сохранения формы
+            order = form.save()
+
+            for product in products:
+                OrderItem.objects.create(order=order, product=product, quantity=1)
+
+            messages.success(request, f"Ваш заказ успешно оформлен, {order.client_name}!")
+            return redirect('thanks')
+
+    else:
+        form = OrderForm()
+
+    return render(request, 'core/order_form.html', {
+        'form': form,
+        'title': 'Создание заказа',
+        'button_text': 'Заказать',
+    })

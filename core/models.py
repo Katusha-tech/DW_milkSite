@@ -52,7 +52,7 @@ class Order(models.Model):
 
     client_name = models.CharField(max_length=100, verbose_name="Имя клиента")
     phone = models.CharField(max_length=25, default="", verbose_name="Телефон")
-    comment = models.TextField(blank=True, db_index=True, verbose_name="Комментарий")
+    comment = models.TextField(max_length=100, blank=True, db_index=True, verbose_name="Комментарий")
     date_created = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Дата создания")
     date_updated = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="new", verbose_name="Статус")

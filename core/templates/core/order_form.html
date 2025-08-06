@@ -1,59 +1,73 @@
 {% extends "base.html" %}
-{% block title %}Заказ на вкусности{% endblock %}
+{% load static %}
+{% block title %}Форма заказа{% endblock %}
 
 {% block content %}
-<section class="py-4 main-body">
-    <div class="container d-flex justify-content-center">
-        <div class="card order-form-card shadow-sm p-4">
-            <h3 class="text-center mb-3 order-form-title">Заказ на вкусности</h3>
+<section class="py-5 main-body">
+    <div class="container px-4 px-md-5">
+        <h3 class="text-center fw-bold mb-5 milksite-title">Заказ на вкусности</h3>
+        <div class="card custom-card p-4 mx-auto">
+            
+
             <form method="post">
                 {% csrf_token %}
+                {{ form.non_field_errors }}
 
                 <!-- Имя клиента -->
-                <div class="mb-3">
-                    <label for="client_name" class="form-label">Имя клиента</label>
-                    <input type="text" class="form-control form-control-sm" id="client_name" name="client_name" required>
+                <div class="mb-3 form-label fw-bold label-color">
+                    {{ form.client_name.label_tag }}
+                    {{ form.client_name }}
+                    {{ form.client_name.errors }}
                 </div>
 
                 <!-- Телефон -->
-                <div class="mb-3">
-                    <label for="phone" class="form-label">Телефон</label>
-                    <input type="tel" class="form-control form-control-sm" id="phone" name="phone" required>
-                </div>
-
-                <!-- Продукты -->
-                <div class="mb-3">
-                    <label for="products" class="form-label">Выберите продукты</label>
-                    <select id="products" name="products" class="form-select form-select-sm" multiple required>
-                        {% for product in products %}
-                            <option value="{{ product }}">{{ product }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="form-text">Вы можете выбрать несколько позиций</div>
-                </div>
-
-                <!-- День привоза -->
-                <div class="mb-3">
-                    <label for="delivery_day" class="form-label">День привоза</label>
-                    <select id="delivery_day" name="delivery_day" class="form-select form-select-sm" required>
-                        <option value="Вторник">Вторник</option>
-                        <option value="Пятница">Пятница</option>
-                    </select>
+                <div class="mb-3 form-label fw-bold label-color">
+                    {{ form.phone.label_tag }}
+                    {{ form.phone }}
+                    {{ form.phone.errors }}
                 </div>
 
                 <!-- Комментарий -->
-                <div class="mb-3">
-                    <label for="comment" class="form-label">Комментарий</label>
-                    <textarea id="comment" name="comment" class="form-control form-control-sm" rows="3"></textarea>
+                <div class="mb-3 form-label fw-bold label-color">
+                    {{ form.comment.label_tag }}
+                    {{ form.comment }}
+                    {{ form.comment.errors }}
+                </div>
+
+                <!-- День привоза -->
+                <div class="mb-3 form-label fw-bold label-color">
+                    {{ form.delivery_day.label_tag }}
+                    {{ form.delivery_day }}
+                    {{ form.delivery_day.errors }}
+                </div>
+
+                <!-- Дата заказа (только дата, без времени) -->
+                <div class="mb-3 form-label fw-bold label-color">
+                    {{ form.appointment_date.label_tag }}
+                    {{ form.appointment_date }}
+                    {{ form.appointment_date.errors }}
+                </div>
+
+                <!-- Продукты -->
+                <div class="mb-3 form-label fw-bold label-color">
+                    {{ form.products.label_tag }}
+                    {{ form.products}}
+                    {{ form.products.errors }}
+                    <small class="form-text text-muted">Вы можете выбрать несколько продуктов</small>
                 </div>
 
                 <!-- Кнопки -->
-                <div class="d-flex justify-content-between mt-3">
-                    <button type="submit" class="btn order-btn">Заказать</button>
-                    <a href="{% url 'orders_list' %}" class="btn btn-return-small">Отмена</a>
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn main-btn">Заказать</button>
+                    <a href="{% url 'landing' %}" class="btn btn-return-small">Отмена</a>
                 </div>
             </form>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script src="{% static 'js/order_form.js' %}"></script>
 {% endblock %}

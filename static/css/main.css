@@ -5,6 +5,22 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+/* Кнопки - done*/
+.main-btn {
+    background-color: #265475;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+    border: none;
+}
+
+.main-btn:hover {
+    background-color: #1b3b59;
+    color:white;
+}
+
 /* Название для секций - done */
 .milksite-title {
     font-size:1.6rem;
@@ -45,6 +61,24 @@
     color: #265475;
 }
 
+/* Стили для формы отзыва и заказа - done*/
+.custom-card {
+    border: 2px solid #265475;
+    font-size: 0.85rem;
+    border-radius: 12px;
+    max-width: 500px;
+    box-shadow: 0 2px 6px rgba(38, 84, 117, 0.15); 
+    transition: box-shadow 0.3s ease;
+}
+
+.custom-card:hover {
+    box-shadow: 0 6px 15px rgba(38, 84, 117, 0.3);
+}
+
+/* Цвет меток для полей в форме заказа и в форме отзыва - done*/
+.label-color {
+    color: #265475;
+}
 
 
 /* Навигация */
@@ -103,19 +137,7 @@
     font-weight: 700;
 }
 
-.order-btn {
-    background-color: #265475;
-    color: white;
-    border-radius: 8px;
-    padding: 10px 20px;
-    margin-top: 15px;
-    transition: background-color 0.3s;
-    border: none;
-}
 
-.order-btn:hover {
-    background-color: #1b3b59;
-}
 
 .features-list {
     margin-top: 20px;
@@ -257,14 +279,18 @@
     padding-bottom: 30px !important;
 }
 
+
+/* Стили карточек продуктов */
 .custom-order-card {
     border: 2px solid #265475;      /* Обводка фирменным синим цветом */
-    border-radius: 15px;            /* Закругление углов */
+    border-radius: 12px;            /* Закругление углов */
     max-width: 280px;
     margin: auto;
+    overflow: hidden;
     box-shadow: 0 2px 6px rgba(38, 84, 117, 0.15); /* Немного тени для объёма */
     transition: box-shadow 0.3s ease;
 }
+
 
 .custom-order-card:hover {
     box-shadow: 0 6px 15px rgba(38, 84, 117, 0.3);
@@ -301,7 +327,6 @@
     background-color: #265475;
     color: white;
 }
-/* Заголовок Журнал заявок */
 
 
 /* Поисковая форма */
@@ -428,12 +453,7 @@
   height: 80px;
 }
 
-/* Стили карточек продуктов */
-.custom-order-card {
-    font-size: 0.85rem;
-    border-radius: 12px;
-    overflow: hidden;
-}
+
 
 /* Обёртка для изображения */
 .product-image-wrapper {
@@ -475,10 +495,7 @@
     margin-bottom: 0.5rem;
 }
 
-/* Цвет меток */
-.label-color {
-    color: #265475;
-}
+
 
 /* Стили звёзд без кнопочной рамки */
 .star-btn {
@@ -517,6 +534,10 @@
   border-radius: 0.5rem;
   background-color: #ffffff;
   padding: 1.5rem;
+  min-height: 200px; /* Можно подбирать под длину отзывов */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .review-card .card-title {
@@ -539,3 +560,11 @@
   border-radius: 30%;
   padding: 0.75rem;
 }
+
+.carousel-inner {
+  min-height: 380px; /* подбери по высоте самого длинного отзыва */
+  display: flex;
+  align-items: center;
+
+}
+

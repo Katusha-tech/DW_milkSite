@@ -3,7 +3,8 @@ from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ClearableFileInput
-from .models import Product, Review
+from .models import Product, Review, Order
+from django.utils.timezone import now
 
 class ProductForm(forms.ModelForm):
     # Расширим инициализатор для добавления form-control к полям формы
@@ -28,8 +29,6 @@ class ProductForm(forms.ModelForm):
         model = Product
         # Поля, которые будут отображаться в форме
         fields = ["name", "description", "price", "is_popular", "image"]
-
-
 
 
 class ReviewForm(forms.ModelForm):
@@ -70,3 +69,50 @@ class ReviewForm(forms.ModelForm):
         }
 
 
+class OrderForm(forms.ModelForm):
+    DELIVERY_DAY_CHOICES = [
+        ("Вторник", "Вторник"),
+        ("Пятница", "Пятница"),
+    ]
+
+    delivery_day = forms.ChoiceField(
+        choices=DELIVERY_DAY_CHOICES,
+        label="День привоза",
+        widget=forms.Select(attrs={"class": "form-select form-select-sm"}),
+        required=True,
+    )
+
+    products = forms.ModelMultipleChoiceField(
+        queryset=Product.objects.all(),
+        widget=forms.SelectMultiple(attrs={
+            "class": "form-select",
+            "id": "products"
+        }),
+        label="Выберите продукты"
+    )
+
+    appointment_date = forms.DateField(
+        widget=forms.DateInput(attrs={
+            "type": "date",
+            "class": "form-control"
+        }),
+        initial=now,
+        label="Дата заказа"
+    )
+
+    class Meta:
+        model = Order
+        fields = [
+            "client_name",
+            "phone",
+            "comment",
+            "delivery_day",
+            "appointment_date",
+            "products",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            if not isinstance(field.widget, forms.SelectMultiple):  # исключаем select-multiple
+                field.widget.attrs.update({"class": "form-control"})
