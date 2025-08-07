@@ -568,3 +568,15 @@
 
 }
 
+textarea {
+  min-height: 80px;
+  max-height: 150px;
+  resize: vertical; /* если хочешь оставить возможность растягивания */
+}
+
+select {
+  border: 1px solid #265475;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}

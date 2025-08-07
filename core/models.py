@@ -50,6 +50,11 @@ class Order(models.Model):
         ("completed", "Выполненная"),
     ]
 
+    DELIVERY_DAY_CHOICES = [
+        ("Вторник", "Вторник"),
+        ("Пятница", "Пятница"),
+    ]
+
     client_name = models.CharField(max_length=100, verbose_name="Имя клиента")
     phone = models.CharField(max_length=25, default="", verbose_name="Телефон")
     comment = models.TextField(max_length=100, blank=True, db_index=True, verbose_name="Комментарий")
@@ -57,6 +62,7 @@ class Order(models.Model):
     date_updated = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="new", verbose_name="Статус")
     appointment_date = models.DateTimeField(blank=True, null=True, verbose_name="Дата заказа")
+    delivery_day = models.CharField(max_length=20, choices=DELIVERY_DAY_CHOICES, default="Вторник",verbose_name="День привоза")
 
     def __str__(self):
         return f"Заказ {self.id}: {self.client_name}"

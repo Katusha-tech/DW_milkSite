@@ -3,7 +3,7 @@
 {% block title %}Детали заказа{% endblock %}
 
 {% block content %}
-<section class="py-3 zigzag-section main-body">
+<section class="py-5 main-body">
     <div class="container-fluid px-4 px-md-5">
 
         <!-- Кнопка возврата -->
@@ -49,7 +49,7 @@
                         </form>
                         <form method="post" action="{% url 'order_cancel' order.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm" style="background-color: #6c757d; color: white;">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">
                                 Отменить
                             </button>
                         </form>

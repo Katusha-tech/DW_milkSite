@@ -78,25 +78,29 @@ class OrderForm(forms.ModelForm):
     delivery_day = forms.ChoiceField(
         choices=DELIVERY_DAY_CHOICES,
         label="День привоза",
-        widget=forms.Select(attrs={"class": "form-select form-select-sm"}),
+        widget=forms.Select(attrs={"class": "form-select custom-style"}),
         required=True,
     )
 
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         widget=forms.SelectMultiple(attrs={
-            "class": "form-select",
-            "id": "products"
+            "class": "form-select custom-style",
+            "id": "products",
+            "size": "1",  # Уменьшает высоту до 1 строки
         }),
         label="Выберите продукты"
     )
 
     appointment_date = forms.DateField(
         widget=forms.DateInput(attrs={
-            "type": "date",
-            "class": "form-control"
+            "readonly": "readonly",
+            "class": "form-control no-calendar",
+            "type": "text",  # избегаем иконки календаря
+            "placeholder": now().strftime("%d-%m-%Y"),
         }),
         initial=now,
+        input_formats=["%d-%m-%Y"],
         label="Дата заказа"
     )
 
@@ -113,6 +117,15 @@ class OrderForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            if not isinstance(field.widget, forms.SelectMultiple):  # исключаем select-multiple
-                field.widget.attrs.update({"class": "form-control"})
+
+        # Форматируем дату заказа
+        self.fields['appointment_date'].initial = now().strftime("%d-%m-%Y")
+
+        # Уменьшаем комментарий
+        self.fields['comment'].widget.attrs.update({'rows': 3})
+
+        # Стили для всех остальных полей (если нет вручную заданных)
+        for name, field in self.fields.items():
+            if not isinstance(field.widget, (forms.Select, forms.SelectMultiple)):
+                existing_class = field.widget.attrs.get("class", "")
+                field.widget.attrs["class"] = f"{existing_class} form-control".strip()
