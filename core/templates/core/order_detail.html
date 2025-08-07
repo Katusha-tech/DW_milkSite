@@ -23,7 +23,7 @@
                         <p><strong>Продукты:</strong></p>
                         <ul class="product-list">
                             {% for product in order.products.all %}
-                                <li>{{ product.name }}</li>  {# Если нужно только название #}
+                                <li>{{ product.name }}</li> 
                             {% endfor %}
                         </ul>
                         <p><strong>Комментарий:</strong> {{ order.comment }}</p>

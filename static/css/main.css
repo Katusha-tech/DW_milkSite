@@ -112,6 +112,22 @@
     color: #265475;
 }
 
+/* Стили для кнопки в шаблонах order,review - done*/
+.order-btn {
+    background-color: #265475;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin-top: 0;
+    transition: background-color 0.3s;
+    border: none;
+}
+
+.order-btn:hover {
+    background-color: #1b3b59;
+    color: white;
+}
+
 
 
 
@@ -262,19 +278,7 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-.order-btn {
-    background-color: #265475;
-    color: white;
-    border-radius: 8px;
-    padding: 8px 16px; /* чуть меньше */
-    margin-top: 0;
-    transition: background-color 0.3s;
-    border: none;
-}
 
-.order-btn:hover {
-    background-color: #1b3b59;
-}
 
 .zigzag-section {
     padding-top: 30px !important;

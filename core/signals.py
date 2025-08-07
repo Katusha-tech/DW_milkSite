@@ -47,29 +47,30 @@ def check_review_text(sender, instance, created, **kwargs):
             print(f"Отзыв {instance.client_name} не опубликован из-за негативных слов.")
 
 
-
-@receiver(post_save, sender=Order)
-def telegram_order_notification(sender, instance, created, **kwargs):
-    """ 
-    Отправляет уведомление в телеграм о создании заказа 
+@receiver(m2m_changed, sender=Order.products.through)
+def send_telegram_notification(sender, instance, action, **kwargs):
     """
-    if created:
-        # Если заказ создан, добываем данные
-        client_name = instance.client_name
-        phone = instance.phone
-        comment = instance.comment
+    Обработка сигнала m2m_changed для модели Order.
+    Он обрабатывает добавление каждой услуги в запись на консультацию.
+    """
+    if action == 'post_add' and kwargs.get('pk_set'):
+        # Получаем список услуг
+        products = [product.name for product in instance.products.all()]
 
         # Формируем сообщение
-        telegram_message = f"""📞*Новый заказ от {client_name}!*📞
 
-*Телефон:* `{phone}`
-*Комментарий:* {comment}
-*Ссылка на заказ:* http://127.0.0.1:8000/admin/core/order/{instance.id}/change/
+        message = f"""🥛 *НОВАЯ ЗАПИСЬ НА УСЛУГУ!* 🥛
+
+👤*Имя:* {instance.client_name}
+📞*Телефон:* `{instance.phone or 'Не указан'}`
+💬*Комментарий:* _{instance.comment or 'Не указан'}_
+📦*Продукты:* {', '.join(products) or 'Не указаны'}
+🗓️ *Дата создания:* {instance.date_created.strftime('%d.%m.%Y %H:%M') if instance.date_created else 'Не указана'}
+📅*Желаемый день:* {instance.delivery_day or 'Не указан'}
+
+🔗*Ссылка на запись:* http://127.0.0.1:8000/admin/core/order/{instance.id}/change/
+        
+#новыйзаказ
 ====================
-"""
-        # Логика отправки сообщения в Telegram
-
-        run(send_telegram_message(TELEGRAM_BOT_API_KEY, TELEGRAM_USER_ID, telegram_message))
-
-
-
+""" 
+        run(send_telegram_message(TELEGRAM_BOT_API_KEY, TELEGRAM_USER_ID, message))
