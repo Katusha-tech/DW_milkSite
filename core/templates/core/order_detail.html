@@ -22,8 +22,8 @@
                         <p><strong>Телефон:</strong> {{ order.phone }}</p>
                         <p><strong>Продукты:</strong></p>
                         <ul class="product-list">
-                            {% for item in order.items.all %}
-                                <li>{{ item.product.name }} — {{ item.quantity }} шт.</li>
+                            {% for product in order.products.all %}
+                                <li>{{ product.name }}</li>  {# Если нужно только название #}
                             {% endfor %}
                         </ul>
                         <p><strong>Комментарий:</strong> {{ order.comment }}</p>

@@ -3,8 +3,7 @@ from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ClearableFileInput
-from django.forms import inlineformset_factory
-from .models import Product, Review, Order, OrderItem
+from .models import Product, Review, Order
 from django.utils.timezone import now
 
 class ProductForm(forms.ModelForm):
@@ -33,40 +32,15 @@ class ProductForm(forms.ModelForm):
 
 
 class OrderForm(forms.ModelForm):
-    DELIVERY_DAY_CHOICES = [
-        ("Вторник", "Вторник"),
-        ("Пятница", "Пятница"),
-    ]
-
-    delivery_day = forms.ChoiceField(
-        choices=DELIVERY_DAY_CHOICES,
-        label="День привоза",
-        widget=forms.Select(attrs={"class": "form-select custom-style"}),
-        required=True,
-    )
-
-    products = forms.ModelMultipleChoiceField(
-        queryset=Product.objects.all(),
-        widget=forms.SelectMultiple(attrs={
-            "class": "form-select custom-style",
-            "id": "products",
-            "size": "1",  # Уменьшает высоту до 1 строки
-        }),
-        label="Выберите продукты"
-    )
-
-    appointment_date = forms.DateField(
-        widget=forms.DateInput(attrs={
-            "readonly": "readonly",
-            "class": "form-control no-calendar",
-            "type": "text",  # избегаем иконки календаря
-            "placeholder": now().strftime("%d-%m-%Y"),
-        }),
-        initial=now,
-        input_formats=["%d-%m-%Y"],
-        label="Дата заказа"
-    )
-
+    """
+    Форма для создания заказа с использованием Bootstrap 5
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Добавляем класс form-control к каждому полю формы
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({"class": "form-control"})
+    
     class Meta:
         model = Order
         fields = [
@@ -75,23 +49,8 @@ class OrderForm(forms.ModelForm):
             "comment",
             "delivery_day",
             "appointment_date",
-            "products",
         ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Форматируем дату заказа
-        self.fields['appointment_date'].initial = now().strftime("%d-%m-%Y")
-
-        # Уменьшаем комментарий
-        self.fields['comment'].widget.attrs.update({'rows': 3})
-
-        # Стили для всех остальных полей (если нет вручную заданных)
-        for name, field in self.fields.items():
-            if not isinstance(field.widget, (forms.Select, forms.SelectMultiple)):
-                existing_class = field.widget.attrs.get("class", "")
-                field.widget.attrs["class"] = f"{existing_class} form-control".strip()
+    
 
 class ReviewForm(forms.ModelForm):
     """

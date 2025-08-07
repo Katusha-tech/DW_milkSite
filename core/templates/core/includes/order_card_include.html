@@ -5,8 +5,8 @@
             <p class="card-text mb-1 custom-card-text"><strong>Номер телефона: </strong> {{ order.phone }} </p>
             <p class="card-text mb-1 custom-card-text"><strong>Дата: </strong> {{ order.appointment_date|date:"d.m.Y H:i" }}</p>
             <p class="card-text mb-1 custom-card-text"><strong>Продукция: </strong>
-                {% for item in order.items.all %}
-                {{ item.product.name }}{% if not forloop.last %}, {% endif %}
+                {% for product in order.products.all %}
+                {{ product.name }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </p>
             <p class="card-text mb-3 custom-card-text">

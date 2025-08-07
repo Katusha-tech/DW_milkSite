@@ -1,5 +1,6 @@
 from django import db
 from django.db import models
+import json
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Отзывы
@@ -57,6 +58,8 @@ class Order(models.Model):
 
     client_name = models.CharField(max_length=100, verbose_name="Имя клиента")
     phone = models.CharField(max_length=25, default="", verbose_name="Телефон")
+    products= models.ManyToManyField("Product", related_name="orders", verbose_name="Продукты")
+    product_quantities = models.TextField(blank=True, verbose_name="Количество по продуктам (JSON)")
     comment = models.TextField(max_length=100, blank=True, db_index=True, verbose_name="Комментарий")
     date_created = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Дата создания")
     date_updated = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
@@ -64,11 +67,17 @@ class Order(models.Model):
     appointment_date = models.DateTimeField(blank=True, null=True, verbose_name="Дата заказа")
     delivery_day = models.CharField(max_length=20, choices=DELIVERY_DAY_CHOICES, default="Вторник",verbose_name="День привоза")
 
+    def get_total_price(self):
+        quantities = json.loads(self.product_quantities or "{}")
+        total = 0
+        for product in self.products.all():
+            qty = int(quantities.get(str(product.id), 1))
+            total += product.price * qty
+        return total
+
     def __str__(self):
         return f"Заказ {self.id}: {self.client_name}"
 
-    def get_total_price(self):
-        return sum(item.get_total_price() for item in self.items.all())
 
     class Meta:
         verbose_name = "Заказ"
@@ -82,19 +91,3 @@ class Order(models.Model):
             models.Index(fields=['status', 'appointment_date'], name='status_appointment_date_idx'),
             models.Index(fields=['client_name', 'phone'], name='client_name_phone_idx'),
         ]
-
-# Промежуточная модель — товар в заказе
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Продукт")
-    quantity = models.PositiveIntegerField(default=1, verbose_name="Количество")
-
-    def __str__(self):
-        return f"{self.product.name} × {self.quantity}"
-
-    def get_total_price(self):
-        return self.product.price * self.quantity
-
-    class Meta:
-        verbose_name = "Товар в заказе"
-        verbose_name_plural = "Товары в заказе"

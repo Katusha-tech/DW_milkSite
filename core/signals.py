@@ -1,6 +1,6 @@
 # Опишем сигнал, который будет слушать создание записи в модель Review 
 # и проверять есть ли в поле text слова "плохо" или "ужасно" - если нет, то меняем is_published на True
-from .models import Order, Review, OrderItem
+from .models import Order, Review
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from .mistral import is_bad_review
@@ -73,31 +73,3 @@ def telegram_order_notification(sender, instance, created, **kwargs):
 
 
 
-@receiver(post_save, sender=OrderItem)
-def send_telegram_notification_on_orderitem_create(sender, instance, created, **kwargs):
-    if created:
-        order = instance.order
-        products = order.items.select_related("product")
-        products_list = [f"{item.product.name} × {item.quantity}" for item in products]
-        products_text = "\n".join(products_list) if products_list else "Не выбрано"
-
-        message = f"""🥛 *НОВЫЙ ЗАКАЗ!* 🥛
-
-👤 *Имя клиента:* {order.client_name}
-📞 *Телефон:* `{order.phone or 'Не указан'}`
-💬 *Комментарий:* _{order.comment or 'Не указан'}_
-📦 *Продукты:* 
-{products_text}
-🗓️ *Дата заказа:* {order.appointment_date.strftime('%d.%m.%Y') if order.appointment_date else 'Не указана'}
-📅 *День привоза:* {getattr(order, 'delivery_day', 'Не указан')}
-
-🔗 *Ссылка на заказ:* http://127.0.0.1:8000/admin/core/order/{order.id}/change/
-
-#новыйзаказ #молочка
-====================
-"""
-        async_to_sync(send_telegram_message)(
-            TELEGRAM_BOT_API_KEY,
-            TELEGRAM_USER_ID,
-            message
-        )

@@ -3,9 +3,11 @@ from django.http import HttpResponse
 from  django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Order, Product, Review, OrderItem
+from .models import Order, Product, Review
 from .forms import ReviewForm, OrderForm
 from django.db.models import Q
+import json
+from django.utils import timezone
 from .data import * 
 
 def base(request):
@@ -145,24 +147,54 @@ def create_review(request):
         
 
 def create_order(request):
-    if request.method == 'POST':
+    products = Product.objects.all()
+
+    if request.method == 'GET':
+        form = OrderForm()
+        return render(request, 'core/order_form.html', {
+            "form": form,
+            "products": products,
+            "form_data": {},
+        })
+
+    elif request.method == 'POST':
         form = OrderForm(request.POST)
-
         if form.is_valid():
-            products = form.cleaned_data.pop('products')  # Удалим продукты до сохранения формы
-            order = form.save()
+            order = form.save(commit=False)
 
-            for product in products:
-                OrderItem.objects.create(order=order, product=product, quantity=1)
+            # Получаем выбранные продукты и их количество
+            selected_products = request.POST.getlist("product")
+            product_quantities = {}
+            for pid in selected_products:
+                qty = request.POST.get(f'quantity_{pid}', '1')
+                try:
+                    qty = int(qty)
+                    if qty > 0:
+                        product_quantities[pid] = qty
+                except ValueError:
+                    continue
 
-            messages.success(request, f"Ваш заказ успешно оформлен, {order.client_name}!")
+            if not product_quantities:
+                return render(request, 'core/order_form.html', {
+                    "form": form,
+                    "products": products,
+                    "error": "Выберите хотя бы один товар и укажите количество.",
+                    "form_data": request.POST,
+                })
+
+            order.product_quantities = json.dumps(product_quantities)
+            order.save()
+            order.products.set(product_quantities.keys())
+
+            order = form.save(commit=False)
+            order.appointment_date = timezone.now()
+            order.save()
+
+            messages.success(request, f"Ваш заказ успешно создан, {order.client_name}!")
             return redirect('thanks')
 
-    else:
-        form = OrderForm()
-
-    return render(request, 'core/order_form.html', {
-        'form': form,
-        'title': 'Создание заказа',
-        'button_text': 'Заказать',
-    })
+        return render(request, 'core/order_form.html', {
+            "form": form,
+            "products": products,
+            "form_data": request.POST,
+        })

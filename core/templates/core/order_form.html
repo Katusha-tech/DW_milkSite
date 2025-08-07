@@ -1,75 +1,92 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}Форма заказа{% endblock %}
+
+{% block title %}Заказ продукции{% endblock %}
 
 {% block content %}
 <section class="py-5 main-body">
-    <div class="container px-4 px-md-5">
-        <h3 class="text-center fw-bold mb-5 milksite-title">Заказ на вкусности</h3>
-        <div class="card custom-card p-4 mx-auto">
-            
+  <div class="container-fluid px-4 px-md-5">
+    <h2 class="text-center fw-bold mb-5">Форма заказа продукции</h2>
+    <div class="card p-4 mx-auto">
+      <div class="col-lg-10 col-xl-8 mx-auto">
+        <div class="bg-white p-4 rounded shadow-sm border">
+          {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
 
-            <form method="post">
-                {% csrf_token %}
-                {{ form.non_field_errors }}
+          <form method="post">
+            {% csrf_token %}
 
-                <!-- Имя клиента -->
-                <div class="mb-3 form-label fw-bold label-color">
-                    {{ form.client_name.label_tag }}
-                    {{ form.client_name }}
-                    {{ form.client_name.errors }}
+            <div class="mb-3">
+              <label for="client_name" class="form-label fw-semibold">Имя клиента<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="client_name" name="client_name" value="{{ form_data.client_name|default:'' }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="phone" class="form-label fw-semibold">Телефон<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="phone" name="phone" value="{{ form_data.phone|default:'' }}" required>
+            </div>
+
+            <hr>
+            <h5 class="fw-semibold mb-3">Выбор продукции и количества<span class="text-danger">*</span></h5>
+
+            {% for product in products %}
+              <div class="row align-items-center mb-3">
+                <div class="col-6">
+                  <div class="form-check">
+                    <input class="form-check-input product-checkbox" type="checkbox" value="{{ product.id }}" id="product_{{ product.id }}" name="product">
+                    <label class="form-check-label" for="product_{{ product.id }}">
+                      {{ product.name }} — {{ product.price }} ₽
+                    </label>
+                  </div>
                 </div>
-
-                <!-- Телефон -->
-                <div class="mb-3 form-label fw-bold label-color">
-                    {{ form.phone.label_tag }}
-                    {{ form.phone }}
-                    {{ form.phone.errors }}
+                <div class="col-6">
+                  <input type="number" class="form-control quantity-input" name="quantity_{{ product.id }}" id="quantity_{{ product.id }}" min="0" value="0" disabled>
                 </div>
+              </div>
+            {% endfor %}
 
-                <!-- Комментарий -->
-                <div class="mb-3 form-label fw-bold label-color">
-                    {{ form.comment.label_tag }}
-                    {{ form.comment }}
-                    {{ form.comment.errors }}
-                </div>
+            <div class="mb-3 mt-4">
+              <label for="delivery_day" class="form-label fw-semibold">День привоза<span class="text-danger">*</span></label>
+              <select class="form-select" id="delivery_day" name="delivery_day" required>
+                <option value="">Выберите день</option>
+                <option value="Вторник" {% if form_data.delivery_day == "Вторник" %}selected{% endif %}>Вторник</option>
+                <option value="Пятница" {% if form_data.delivery_day == "Пятница" %}selected{% endif %}>Пятница</option>
+              </select>
+            </div>
 
-                <!-- День привоза -->
-                <div class="mb-3 form-label fw-bold label-color">
-                    {{ form.delivery_day.label_tag }}
-                    {{ form.delivery_day }}
-                    {{ form.delivery_day.errors }}
-                </div>
+            <div class="mb-3">
+              <label for="comment" class="form-label fw-semibold">Комментарий</label>
+              <textarea class="form-control" id="comment" name="comment" rows="3">{{ form_data.comment|default:'' }}</textarea>
+            </div>
 
-                <!-- Дата заказа (только дата, без времени) -->
-                <div class="mb-3 form-label fw-bold label-color">
-                    {{ form.appointment_date.label_tag }}
-                    {{ form.appointment_date }}
-                    {{ form.appointment_date.errors }}
-                </div>
-
-                <!-- Продукты -->
-                <div class="mb-3 form-label fw-bold label-color">
-                    {{ form.products.label_tag }}
-                    {{ form.products}}
-                    {{ form.products.errors }}
-                    <small class="form-text text-muted">Вы можете выбрать несколько продуктов</small>
-                </div>
-
-                <!-- Кнопки -->
-                <div class="d-flex justify-content-between mt-4">
-  <button type="submit" class="btn main-btn w-100 me-2">Заказать</button>
-  <a href="{% url 'landing' %}" class="btn btn-outline-secondary w-100 ms-2">
-    <i class="bi bi-arrow-left"></i> Отмена
-  </a>
-</div>
-            </form>
+            <div class="d-flex flex-column flex-md-row gap-3 mt-4">
+              <button type="submit" class="btn btn-dark flex-grow-1">
+                <i class="bi bi-check-circle me-1"></i> Заказать
+              </button>
+              <a href="{% url 'landing' %}" class="btn btn-outline-secondary flex-grow-1">Отмена</a>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 {% endblock %}
 
 {% block scripts %}
-    {{ block.super }}
-    <script src="{% static 'js/order_form.js' %}"></script>
+  {{ block.super }}
+  <script>
+    document.querySelectorAll('.product-checkbox').forEach((checkbox, index) => {
+      checkbox.addEventListener('change', function () {
+        const input = document.querySelector(`#quantity_${this.value}`);
+        input.disabled = !this.checked;
+        if (this.checked && input.value === "0") {
+          input.value = "1";
+        } else if (!this.checked) {
+          input.value = "0";
+        }
+      });
+    });
+  </script>
 {% endblock %}
