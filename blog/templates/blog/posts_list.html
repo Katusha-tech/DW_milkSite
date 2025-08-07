@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load cache %}
+{% block content %}
+<div class="container my-4">
+  <h1 class="text-danger fw-bold mb-4 text-center">Новости МОЛОКО&ДОМ</h1>
+  <div class="d-flex flex-column align-items-center gap-4">
+    {% for post in posts %}
+      <div class="w-100 d-flex justify-content-center">
+        {% include "blog/post_card_include.html" with post=post %}
+      </div>
+    {% empty %}
+      <p class="text-center">Постов пока нет.</p>
+    {% endfor %}
+  </div>
+
+{% endblock %}

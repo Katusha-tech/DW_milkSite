@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from  django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -20,6 +20,10 @@ def thanks(request):
 
 @login_required
 def orders_list(request):
+    if not request.user.is_staff:
+        messages.error(request, "У вас нет доступа к этой странице.")
+        return redirect("landing")
+    
     all_orders = Order.objects.all()
     search_query = request.GET.get('search', None)
     check_boxes = request.GET.getlist('search_in')

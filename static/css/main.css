@@ -81,11 +81,7 @@
 }
 
 
-/* Навигация */
-.nav-main {
-    background-color: #FFFFFF;
-}
-
+/* Стили для шаблона nav_menu_include - done */
 .nav-text {
     color: #265475;
     font-weight: 400;
@@ -115,6 +111,12 @@
     font-style: italic;
     color: #265475;
 }
+
+
+
+
+
+
 
 /* Основной контент */
 .about-section {

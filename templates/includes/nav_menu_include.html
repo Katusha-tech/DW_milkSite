@@ -1,46 +1,56 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg shadow-sm nav-main">
+<nav class="navbar navbar-expand-lg shadow-sm main-body">
   <div class="container">
     <div class="d-flex w-100 justify-content-center align-items-center flex-wrap">
 
-      <!-- Левая часть -->
+      {% comment %} Левая часть {% endcomment %}
       <ul class="navbar-nav flex-row align-items-center me-3 nav-left">
-        <li class="nav-item px-2">
+        <li class="nav-item px-1">
           <a class="nav-link nav-text" href="{% url 'landing' %}#main">Главная</a>
         </li>
-        <li class="nav-item px-2">
+        <li class="nav-item px-1">
           <a class="nav-link nav-text" href="{% url 'products' %}#products">Продукция</a>
         </li>
-        <li class="nav-item px-2">
+        <li class="nav-item px-1">
           <a class="nav-link nav-text" href="{% url 'about_milk' %}#aboutmilk">О молоке</a>
+        </li>
+        <li class="nav-item px-1">
+          <a class="nav-link nav-text" href="{% url 'blog:posts_list' %}">Новости</a>
         </li>
       </ul>
 
-      <!-- Центр: Название компании -->
+      {% comment %} Центр: Название компании {% endcomment %}
       <div class="navbar-brand mx-2 d-flex flex-column align-items-center">
         <span class="company-name">МОЛОКО<span class="ampersand">&</span>ДОМ</span>
         <span class="company-tagline">«Раздели молочные мгновения»</span>
       </div>
 
-      <!-- Правая часть -->
+      {% comment %} Правая часть {% endcomment %}
       <ul class="navbar-nav flex-row align-items-center ms-3 nav-right">
-        <li class="nav-item px-2">
+        <li class="nav-item px-1">
           <a class="nav-link nav-text" href="{% url 'delivery_payment' %}#delpay">Доставка и оплата</a>
         </li>
-        <li class="nav-item px-2">
+        <li class="nav-item px-1">
           <a class="nav-link nav-text" href="{% url 'orders_list' %}#orders">Заказы</a>
         </li>
-        <li class="nav-item px-2">
+        <li class="nav-item px-1">
           <a class="nav-link nav-text" href="{% url 'reviews' %}#reviews">Отзывы</a>
         </li>
-
-        {% if user.is_staff %}
-        <li class="nav-item px-2">
-          <a class="btn btn-outline-danger btn-sm" href="/admin/">Админка</a>
+        {% if user.is_authenticated and user.is_staff %}
+        {% comment %} Админ вошёл {% endcomment %}
+        <li class="nav-item px-1">
+          <a class="nav-link d-flex align-items-center text-danger" href="/admin/"> Админка
+          </a>
+        </li>
+        {% elif not user.is_authenticated %}
+        {% comment %} Пользователь не вошёл, показываем только иконку {% endcomment %}
+        <li class="nav-item px-1">
+          <a class="nav-link" href="/admin/login/">
+            <i class="bi bi-house text-danger fs-4"></i>
+          </a>
         </li>
         {% endif %}
       </ul>
-
     </div>
   </div>
 </nav>

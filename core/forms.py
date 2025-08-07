@@ -3,7 +3,8 @@ from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ClearableFileInput
-from .models import Product, Review, Order
+from django.forms import inlineformset_factory
+from .models import Product, Review, Order, OrderItem
 from django.utils.timezone import now
 
 class ProductForm(forms.ModelForm):
@@ -29,44 +30,6 @@ class ProductForm(forms.ModelForm):
         model = Product
         # Поля, которые будут отображаться в форме
         fields = ["name", "description", "price", "is_popular", "image"]
-
-
-class ReviewForm(forms.ModelForm):
-    """
-    Форма для создания отзыва о мастере с использованием Bootstrap 5
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Добавляем класс form-control к каждому полю формы
-        for field_name, field in self.fields.items():
-            if (
-                field_name != "rating"
-            ):  # Для рейтинга будет специальная обработка через JS
-                field.widget.attrs.update({"class": "form-control"})
-
-    # Скрытое поле для рейтинга, которое будет заполняться через JS
-    rating = forms.IntegerField(
-        widget=forms.HiddenInput(),
-        required=True,
-    )
-
-    class Meta:
-        model = Review
-        # Исключаем поле is_published из формы для пользователей
-        exclude = ["is_published"]
-        widgets = {
-            "client_name": forms.TextInput(
-                attrs={"placeholder": "Как к вам обращаться?", "class": "form-control"}
-            ),
-            "text": forms.Textarea(
-                attrs={
-                    "placeholder": "Расскажите что вам понравилось",
-                    "class": "form-control",
-                    "rows": "3",
-                }
-            ),
-        }
 
 
 class OrderForm(forms.ModelForm):
@@ -129,3 +92,41 @@ class OrderForm(forms.ModelForm):
             if not isinstance(field.widget, (forms.Select, forms.SelectMultiple)):
                 existing_class = field.widget.attrs.get("class", "")
                 field.widget.attrs["class"] = f"{existing_class} form-control".strip()
+
+class ReviewForm(forms.ModelForm):
+    """
+    Форма для создания отзыва о мастере с использованием Bootstrap 5
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Добавляем класс form-control к каждому полю формы
+        for field_name, field in self.fields.items():
+            if (
+                field_name != "rating"
+            ):  # Для рейтинга будет специальная обработка через JS
+                field.widget.attrs.update({"class": "form-control"})
+
+    # Скрытое поле для рейтинга, которое будет заполняться через JS
+    rating = forms.IntegerField(
+        widget=forms.HiddenInput(),
+        required=True,
+    )
+
+    class Meta:
+        model = Review
+        # Исключаем поле is_published из формы для пользователей
+        exclude = ["is_published"]
+        widgets = {
+            "client_name": forms.TextInput(
+                attrs={"placeholder": "Как к вам обращаться?", "class": "form-control"}
+            ),
+            "text": forms.Textarea(
+                attrs={
+                    "placeholder": "Расскажите что вам понравилось",
+                    "class": "form-control",
+                    "rows": "3",
+                }
+            ),
+        }
+
