@@ -586,3 +586,76 @@ select {
   padding: 0.5rem;
   font-size: 1rem;
 }
+
+.square-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.description-text {
+    max-height: 3em;
+    overflow: hidden;
+    line-height: 1.5em;
+}
+
+.toggle-desc {
+    color: #007bff;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.square-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Пагинация в стиле "Зигзаг удачи" */
+
+.pagination {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem; 
+}
+
+.pagination .page-link {
+  color: #2a2a2a !important; /* темный текст */
+  border: 2px solid #c62828; /* красная рамка */
+  margin: 0 0.25rem;
+  padding: 0.3rem 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 0.25rem;
+}
+
+.pagination .page-link:hover,
+.pagination .page-link:focus {
+  background-color: #c62828 !important;
+  color: #fff !important;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.page-item.active .page-link {
+  background-color: #c62828 !important;
+  border-color: #c62828 !important;
+  color: #fff !important;
+  font-weight: 700;
+  cursor: default;
+  box-shadow: none;
+}
+
+.pagination .page-link:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 0.2rem rgba(198, 40, 40, 0.4) !important; /* красная полупрозрачная обводка */
+}
+
+.post-card {
+  max-width: 720px;
+  width: 100%;
+  box-sizing: border-box;
+}

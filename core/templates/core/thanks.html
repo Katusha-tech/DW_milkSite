@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Спасибо за заказ!{% endblock %}
+{% block title %}Благодарность{% endblock %}
 
 {% block content %}
 <div class="container text-center mt-5">
     <div class="thanks-card">
-        <h1 class="thanks-title">
-            Спасибо за заказ!
-        </h1>
-        <p class="thanks-text">
-            Коровки готовят молоко для вас.
+        <p class="lead">{{ source_message }}</p>
+        {% if source == "order" %}
+        <hr>
+        <p class="thanks-text">Коровки готовят молоко для вас!</p>
+        {% endif %}
+        <p class="mt-4">
+            Вы будете перенаправлены на главную через 
+            <span id="countdown" class="fw-bold text-danger" data-landing-url="{% url 'landing' %}">7</span> секунд.
         </p>
         <div class="thanks-image-wrapper">
             <img src="{% static 'images/cow_relax.png' %}" alt="Спасибо" class="thanks-image">
@@ -20,4 +23,13 @@
         </a>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
+
+{% block scripts %}
+    {{ block.super }}
+    {% if source == "order" or source == "review" %}
+    <script>
+        {% include "core/js/thanks_counter_time.js" %}
+    </script>
+    {% endif %}
+{% endblock scripts %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Заказ продукции{% endblock %}
+{% block title %}Заказ продукции - {{block.super}}{% endblock %}
 
 {% block content %}
 <section class="py-5 main-body">
@@ -65,4 +65,5 @@
 
 {% block scripts %}
   {{ block.super }}
+  <script src="{% static 'js/order_form.js' %}"></script>
 {% endblock %}

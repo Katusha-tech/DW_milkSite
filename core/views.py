@@ -1,41 +1,94 @@
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
-from  django.shortcuts import get_object_or_404, redirect
+# Стандартные библиотеки
+import json
+
+# Django
+from django.shortcuts import redirect, render, get_object_or_404, redirect
+from django.http import HttpResponse, JsonResponse
+from django.db.models import Q, F, Prefetch
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views import View
+from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.utils import timezone
+
+# Приложения
 from .models import Order, Product, Review
 from .forms import ReviewForm, OrderForm
-from django.db.models import Q
-import json
-from django.utils import timezone
 from .data import * 
 
-def base(request):
-    return render(request, 'base.html')
 
-def landing(request):
-    return render(request, 'core/landing.html')
+class StaffRequiredMixin(UserPassesTestMixin):
+    """
+    Миксин для проверки, является ли пользователь сотрудником (is_staff).
+    Если проверка не пройдена, пользователь перенаправляется на главную страницу
+    с сообщением об ошибке.
+    """
 
-def thanks(request):
-    return render(request, 'core/thanks.html')
+    def test_func(self):
+        """Проверяет, аутентифицирован ли пользователь и является ли сотрудником."""
+        return self.request.user.is_authenticated and self.request.user.is_staff
 
-
-@login_required
-def orders_list(request):
-    if not request.user.is_staff:
-        messages.error(request, "У вас нет доступа к этой странице.")
+    def handle_no_permission(self):
+        """Обрабатывает отсутствие прав доступа, показывая сообщение об ошибке."""
+        messages.error(self.request, "У вас нет доступа к этому разделу.")
         return redirect("landing")
     
-    all_orders = Order.objects.all()
-    search_query = request.GET.get('search', None)
-    check_boxes = request.GET.getlist('search_in')
-    
-    if not check_boxes:
-        check_boxes = ['name']
 
-    if search_query:
+
+class LandingView(TemplateView):
+    template_name = 'core/landing.html'
+
+class ThanksView(TemplateView):
+    template_name = 'core/thanks.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        source = self.kwargs.get('source')
+        context['source'] = source 
+
+        context['additional_message'] = 'Спасибо, что выбрали нас!'
+
+        if source == 'order':
+            context['source_message'] = "Ваш заказ успешно создан и принят в обработку"
+        elif source == 'review':
+            context['source_message'] = "Ваш отзыв успешно отправлен и будет опубликован после модерации"
+        elif source:
+            context['source_message'] = f"Благодарим вас за ваше действие, инициированное со страницы: {source}."
+        else:
+            context['source_message'] = "Спасибо за посещение!"
+
+        return context
+
+
+
+class OrdersListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Order
+    template_name = 'core/orders_list.html'
+    context_object_name = 'orders'
+    paginate_by = 4
+
+    def test_func(self):
+        # Только для персонала
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет доступа к этой странице.")
+        return redirect("landing")
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get("search", "").strip()
+        check_boxes = self.request.GET.getlist("search_in") or ['name']
+
+        if not search_query:
+            return queryset
+
         filters = Q()
-        
+
         if "phone" in check_boxes:
             filters |= Q(phone__icontains=search_query)
 
@@ -43,132 +96,117 @@ def orders_list(request):
             filters |= Q(client_name__icontains=search_query)
 
         if "status" in check_boxes:
-            # Поиск по отображаемым значениям статуса
-            status_display_map = dict(Order.STATUS_CHOICES)
-            matching_status_codes = []
-            
-            # Ищем коды статусов, у которых отображаемое значение содержит поисковый запрос
-            for code, display in Order.STATUS_CHOICES:
-                if search_query.lower() in display.lower():
-                    matching_status_codes.append(code)
-            
-            # Если найдены совпадения, добавляем их в фильтр
+            matching_status_codes = [
+                code for code, display in Order.STATUS_CHOICES
+                if search_query.lower() in display.lower()
+            ]
             if matching_status_codes:
                 filters |= Q(status__in=matching_status_codes)
             else:
-                # Если нет совпадений по отображаемым значениям, 
-                # пробуем искать по коду статуса (для администраторов)
                 filters |= Q(status__icontains=search_query)
 
-        all_orders = all_orders.filter(filters)
+        return queryset.filter(filters)
 
-    context = {
-        'title': 'Список заказов',
-        'orders': all_orders,
-    }
-    return render(request, 'core/orders_list.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Список заказов'
+        return context
 
 
-@login_required
-def order_detail(request, order_id: int):
-    order = get_object_or_404(Order, id=order_id)
-    context = {'title': f'Заказ №{order_id}', 'order': order}
-    return render(request, 'core/order_detail.html', context)
+class OrderDetailView(StaffRequiredMixin, DetailView):
+    model = Order
+    template_name = 'core/order_detail.html'
+    pk_url_kwarg = 'order_id'
 
-@login_required
-def order_confirm(request, order_id):
-    """Логика подтверждения заказа"""
-    order = get_object_or_404(Order, pk=order_id)
-    if request.method == 'POST':
-        order.status = 'confirmed'  # или 'confirmed' — зависит от твоей модели
+
+class OrderConfirmView(LoginRequiredMixin, View):
+    def post(self, request, order_id):
+        order = get_object_or_404(Order, pk=order_id)
+        order.status = 'confirmed'
         order.save()
-    return redirect('order_detail', order_id=order.id)
+        return redirect('order_detail', order_id=order.id)
 
-@login_required
-def order_cancel(request, order_id):
-    """Логика отмены заказа"""
-    order = get_object_or_404(Order, pk=order_id)
-    if request.method == 'POST':
-        order.status = 'cancelled'  # или 'cancelled'
+class OrderCancelView(LoginRequiredMixin, View):
+    def post(self, request, order_id):
+        order = get_object_or_404(Order, pk=order_id)
+        order.status = 'cancelled'
         order.save()
-    return redirect('order_detail', order_id=order.id)
+        return redirect('order_detail', order_id=order.id)
 
-def products(request):
-    products = Product.objects.all()
-    context = {
-        'products': products
-    }
-    return render(request, 'core/products.html', context)
-
-def reviews(request):
-    reviews = Review.objects.filter(is_published=True).order_by('-created_at')
-    context = {
-        'reviews': reviews,
-    }
-    return render(request, 'core/reviews.html', context)
-
-def about_milk(request):
-    return render(request, 'core/about_milk.html')
-
-def delivery_payment(request):
-    return render(request, 'core/delivery_payment.html')
+class ProductListView(ListView):
+    model = Product
+    template_name = 'core/products.html'
+    context_object_name = "products"
 
 
-def create_review(request):
-    if request.method == 'GET':
-        form = ReviewForm()
-        context = {
-            'title': 'Создание отзыва',
-            'form': form,
-            'button_text': 'Создать',
-        }
-        return render(request, 'core/reviews_form.html', context)
+class ProductsDetailView(DetailView):
+    """
+    Представление для отображения детальной информации о продукте.
+    Используется модель Product и явно указанное имя шаблона
+    """
+    model = Product
+    template_name = 'core/product_detail.html'
 
-    if request.method == 'POST':
-        form = ReviewForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.is_published = False
-            review.save()
+class ReviewsListView(ListView):
+    model = Review
+    template_name = 'core/reviews.html'
+    context_object_name = 'reviews'
+    ordering = ['-created_at']
 
-            client_name = form.cleaned_data.get('client_name')
-            messages.success(request, f"Отзыв от {client_name} успешно создан и отправлен на модерацию!")
+    def get_queryset(self):
+        return Review.objects.filter(is_published=True).order_by('-created_at')
 
-            return redirect("thanks")
-        else:
-            # Форма не прошла валидацию — нужно вернуть шаблон с ошибками
-            context = {
-                'title': 'Создание отзыва',
-                'form': form,
-                'button_text': 'Создать',
-            }
-            return render(request, 'core/reviews_form.html', context)
+class AboutMilkView(TemplateView):
+    template_name = 'core/about_milk.html'
+
+class DeliveryPaymentView(TemplateView):
+    template_name = 'core/delivery_payment.html'
+
+
+class ReviewCreateView(CreateView):
+    """
+    Представление для создания нового отзыва.
+    """
+    model = Review
+    form_class = ReviewForm
+    template_name = 'core/reviews_form.html'
+
+    def form_valid(self, form):
+        review = form.save(commit=False)
+        review.is_published = False
+        review.save()
+        messages.success(self.request, f"Отзыв от {review.client_name} успешно отправлен на модерацию!")
+        return redirect("thanks_with_source", source='review')
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+    
+
+    
         
 
-def create_order(request):
-    products = Product.objects.all()
-
-    if request.method == 'GET':
+class OrderCreateView(CreateView):
+    def get(self, request):
         form = OrderForm()
+        products = Product.objects.all()
         return render(request, 'core/order_form.html', {
             "form": form,
             "products": products,
             "form_data": {},
         })
 
-    elif request.method == 'POST':
+    def post(self, request):
         form = OrderForm(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
+        products = Product.objects.all()
 
-            # Получаем выбранные продукты и их количество
+        if form.is_valid():
             selected_products = request.POST.getlist("product")
             product_quantities = {}
+
             for pid in selected_products:
-                qty = request.POST.get(f'quantity_{pid}', '1')
                 try:
-                    qty = int(qty)
+                    qty = int(request.POST.get(f'quantity_{pid}', '1'))
                     if qty > 0:
                         product_quantities[pid] = qty
                 except ValueError:
@@ -182,16 +220,14 @@ def create_order(request):
                     "form_data": request.POST,
                 })
 
+            order = form.save(commit=False)
+            order.appointment_date = timezone.now()
             order.product_quantities = json.dumps(product_quantities)
             order.save()
             order.products.set(product_quantities.keys())
 
-            order = form.save(commit=False)
-            order.appointment_date = timezone.now()
-            order.save()
-
             messages.success(request, f"Ваш заказ успешно создан, {order.client_name}!")
-            return redirect('thanks')
+            return redirect("thanks_with_source", source='order')
 
         return render(request, 'core/order_form.html', {
             "form": form,
