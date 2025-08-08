@@ -128,9 +128,59 @@
     color: white;
 }
 
+/* Стили для Users -done*/
+.users-card {
+    font-family: 'Montserrat', sans-serif;
+    border: 2px solid #265475;
+    font-size: 0.85rem;
+    border-radius: 12px;
+    max-width: 700px;
+    box-shadow: 0 2px 6px rgba(38, 84, 117, 0.15); 
+    transition: box-shadow 0.3s ease;
+}
 
+.users-card:hover {
+    box-shadow: 0 6px 15px rgba(38, 84, 117, 0.3);
+}
 
+/* Стили для account_menu_include*/
+.profile-card {
+    font-family: 'Montserrat', sans-serif;
+    border: 2px solid #265475;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 6px rgba(38, 84, 117, 0.15); 
+    transition: box-shadow 0.3s ease;
+}
 
+.profile-card:hover {
+    box-shadow: 0 6px 15px rgba(38, 84, 117, 0.3);
+}
+
+.profile-name {
+    color: #265475;
+    font-size: 1rem;
+}
+
+/* Стили для блока users - done*/
+.name-card {
+    font-family: 'Montserrat', sans-serif;
+    border: 2px solid #265475;
+    border-radius: 12px;
+    max-width: 600px;
+    box-shadow: 0 2px 6px rgba(38, 84, 117, 0.15); 
+    transition: box-shadow 0.3s ease;
+}
+
+.name-card:hover {
+    box-shadow: 0 6px 15px rgba(38, 84, 117, 0.3);
+}
+
+/* Фон и рамка для активного элемента списка */
+.list-group-item.active {
+    background-color: #265475 !important;
+    border-color: #265475 !important;
+    color: #fff !important; /* чтобы текст точно был белым */
+}
 
 
 
@@ -602,7 +652,7 @@ select {
 }
 
 .toggle-desc {
-    color: #007bff;
+    color: #265475;
     background: none;
     border: none;
     cursor: pointer;
@@ -618,14 +668,14 @@ select {
 /* Пагинация в стиле "Зигзаг удачи" */
 
 .pagination {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   font-size: 0.85rem; 
 }
 
 .pagination .page-link {
   color: #2a2a2a !important; /* темный текст */
-  border: 2px solid #c62828; /* красная рамка */
+  border: 2px solid #265475; /* красная рамка */
   margin: 0 0.25rem;
   padding: 0.3rem 0.5rem;
   transition: background-color 0.3s, color 0.3s;
@@ -634,15 +684,15 @@ select {
 
 .pagination .page-link:hover,
 .pagination .page-link:focus {
-  background-color: #c62828 !important;
+  background-color: #265475 !important;
   color: #fff !important;
   text-decoration: none;
   box-shadow: none;
 }
 
 .page-item.active .page-link {
-  background-color: #c62828 !important;
-  border-color: #c62828 !important;
+  background-color: #265475 !important;
+  border-color: #265475 !important;
   color: #fff !important;
   font-weight: 700;
   cursor: default;
@@ -651,7 +701,7 @@ select {
 
 .pagination .page-link:focus {
   outline: none !important;
-  box-shadow: 0 0 0 0.2rem rgba(198, 40, 40, 0.4) !important; /* красная полупрозрачная обводка */
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.05) !important; /* красная полупрозрачная обводка */
 }
 
 .post-card {

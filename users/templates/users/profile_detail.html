@@ -4,9 +4,10 @@
 {% block title %}{{ title }} - {{ block.super }}{% endblock %}
 
 {% block account_content %}
-<div class="p-3 bg-white rounded shadow-sm" style="max-width: 700px; margin: 0 auto;">
-  <h2 class="text-danger fw-bold mb-4 text-center">{{ title }}</h2>
-
+<div class="container">
+  
+  <div class="name-card p-4 mx-auto">
+  <h2 class="text-center fw-bold mb-5 milksite-title">{{ title }}</h2>
   <div class="d-flex gap-4 align-items-start">
     <div>
       {% if profile_user.avatar %}
@@ -33,10 +34,11 @@
 
   {% if is_own_profile %}
     <div class="mt-4 text-center">
-      <a href="{% url 'users:profile_edit' %}" class="btn btn-danger">
+      <a href="{% url 'users:profile_edit' %}" class="btn order-btn">
         <i class="bi bi-pencil-square me-1"></i> Редактировать профиль
       </a>
     </div>
   {% endif %}
+  </div>
 </div>
 {% endblock account_content %}
