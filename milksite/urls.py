@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingView.as_view(), name='landing'),
     path('milksite/', include('core.urls')),
+    path('users/', include('users.urls')),
     path('blog/', include('blog.urls')),
 ]
 
