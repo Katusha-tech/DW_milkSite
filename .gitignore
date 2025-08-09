@@ -2,5 +2,13 @@
 .venv/
 db.sqlite3
 *__pycache__
+*.pyc
 .env
+notes/images/*
+media/images/products/*
+media/images/*
 
+db.sqlite3-wal
+db.sqlite3-shm
+Microsoft/
+pip/

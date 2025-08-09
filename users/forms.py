@@ -13,7 +13,7 @@ class UserLoginForm(AuthenticationForm):
         # Кастомизация поля username
         self.fields['username'].widget.attrs.update({
             'class': 'form-control form-control-sm',
-            'placeholder': 'Имя пользователя или email'
+            'placeholder': 'Введите email'
         })
         # Кастомизация поля password
         self.fields['password'].widget.attrs.update({

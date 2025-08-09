@@ -23,12 +23,6 @@
       {% if profile_user.birth_date %}
         <p><strong>Дата рождения:</strong> {{ profile_user.birth_date|date:"d.m.Y" }}</p>
       {% endif %}
-      {% if profile_user.telegram_id %}
-        <p><strong>Telegram ID:</strong> {{ profile_user.telegram_id }}</p>
-      {% endif %}
-      {% if profile_user.github_id %}
-        <p><strong>GitHub ID:</strong> {{ profile_user.github_id }}</p>
-      {% endif %}
     </div>
   </div>
 
