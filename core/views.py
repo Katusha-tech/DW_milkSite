@@ -65,7 +65,7 @@ class ThanksView(TemplateView):
 
 
 
-class OrdersListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class OrdersListView(StaffRequiredMixin, ListView):
     model = Order
     template_name = 'core/orders_list.html'
     context_object_name = 'orders'
