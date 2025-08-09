@@ -1,32 +1,47 @@
-# Опишем сигнал, который будет слушать создание записи в модель Review 
-# и проверять есть ли в поле text слова "плохо" или "ужасно" - если нет, то меняем is_published на True
-from .models import Order, Review
+import threading
+from asyncio import run
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
+from django.conf import settings
+from .models import Order, Review
 from .mistral import is_bad_review
 from .telegram_bot import send_telegram_message
-from asyncio import run
-from telegram.error import BadRequest
-from asgiref.sync import async_to_sync
-# Из настроек импортирум токен и id чата 
-from django.conf import settings
 
 TELEGRAM_BOT_API_KEY = settings.TELEGRAM_BOT_API_KEY
 TELEGRAM_USER_ID = settings.TELEGRAM_USER_ID
 
 
+# ======== Общая функция отправки в Telegram =========
+def send_telegram_async(message: str):
+    """Отправка в Telegram в отдельном потоке, чтобы не блокировать сайт."""
+    def _send():
+        try:
+            run(send_telegram_message(
+                TELEGRAM_BOT_API_KEY,
+                TELEGRAM_USER_ID,
+                message
+            ))
+        except Exception as e:
+            print(f"[Telegram ERROR] {e}")
+
+    threading.Thread(target=_send).start()
+
+
+# ======== Отзывы =========
 @receiver(post_save, sender=Review)
 def check_review_text(sender, instance, created, **kwargs):
-    """ 
-    Проверяет текст отзыва на наличие слов 'плохо' или 'ужасно'. 
-    Если таких слов нет, то устанавливаем is_published = True
     """
-    if created:
-        if not is_bad_review(instance.text):
-            instance.is_published = True
-            instance.save()
-            # Отправка в телеграм
-            message = f"""
+    При создании отзыва проверяем текст.
+    Если нет негативных слов — публикуем и отправляем в Telegram.
+    """
+    if not created:
+        return
+
+    if not is_bad_review(instance.text):
+        instance.is_published = True
+        instance.save(update_fields=["is_published"])
+
+        message = f"""
 🎉*Новый отзыв от клиента!*🎉
 
 👤*Имя:* {instance.client_name}
@@ -38,39 +53,35 @@ def check_review_text(sender, instance, created, **kwargs):
 #отзыв
 =================
 """
-            run(send_telegram_message(TELEGRAM_BOT_API_KEY, TELEGRAM_USER_ID, message))
+        send_telegram_async(message)
 
-        else:
-            instance.is_published = False
-            instance.save()
-            # Вывод  в терминал
-            print(f"Отзыв {instance.client_name} не опубликован из-за негативных слов.")
+    else:
+        instance.is_published = False
+        instance.save(update_fields=["is_published"])
+        print(f"Отзыв {instance.client_name} не опубликован из-за негативных слов.")
 
 
+# ======== Заказы =========
 @receiver(m2m_changed, sender=Order.products.through)
 def send_telegram_notification(sender, instance, action, **kwargs):
     """
-    Обработка сигнала m2m_changed для модели Order.
-    Он обрабатывает добавление каждой услуги в запись на консультацию.
+    При добавлении товаров в заказ — отправляем уведомление в Telegram.
     """
     if action == 'post_add' and kwargs.get('pk_set'):
-        # Получаем список услуг
         products = [product.name for product in instance.products.all()]
-
-        # Формируем сообщение
 
         message = f"""🥛 *НОВАЯ ЗАПИСЬ НА УСЛУГУ!* 🥛
 
 👤*Имя:* {instance.client_name}
-📞*Телефон:* `{instance.phone or 'Не указан'}`
-💬*Комментарий:* _{instance.comment or 'Не указан'}_
-📦*Продукты:* {', '.join(products) or 'Не указаны'}
-🗓️ *Дата создания:* {instance.date_created.strftime('%d.%m.%Y %H:%M') if instance.date_created else 'Не указана'}
-📅*Желаемый день:* {instance.delivery_day or 'Не указан'}
+📞*Телефон:* `{instance.phone or 'Не указан'}`  
+💬*Комментарий:* _{instance.comment or 'Не указан'}_  
+📦*Продукты:* {', '.join(products) or 'Не указаны'}  
+🗓️ *Дата создания:* {instance.date_created.strftime('%d.%m.%Y %H:%M') if instance.date_created else 'Не указана'}  
+📅*Желаемый день:* {instance.delivery_day or 'Не указан'}  
 
 🔗*Ссылка на запись:* http://127.0.0.1:8000/admin/core/order/{instance.id}/change/
         
 #новыйзаказ
 ====================
-""" 
-        run(send_telegram_message(TELEGRAM_BOT_API_KEY, TELEGRAM_USER_ID, message))
+"""
+        send_telegram_async(message)
