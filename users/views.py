@@ -1,5 +1,6 @@
 """Представления для работы с пользователями: регистрация, аутентификация, профиль."""
-
+from allauth.account.utils import perform_login
+from django.conf import settings
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
@@ -20,9 +21,9 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmVie
 
 class CustomPasswordResetView(PasswordResetView):
     """Кастомная реализация сброса пароля."""
-    template_name = 'users/password_reset_form.html'
+    template_name = 'users/password_reset.html'
     email_template_name = 'users/password_reset_email.html'
-    success_url = reverse_lazy('users:password_reset_done')
+    success_url = reverse_lazy('users:password_reset')
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     """Кастомная реализация подтверждения сброса пароля."""
@@ -30,7 +31,7 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     """Кастомная реализация подтверждения сброса пароля."""
-    template_name = 'users/password_reset_confirm.html'
+    template_name = 'users/password_reset_from_key.html'
     form_class = CustomSetPasswordForm
     success_url = reverse_lazy('users:password_reset_complete')
 
@@ -38,44 +39,37 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     """Кастомная реализация страницы успешного сброса пароля."""
     template_name = 'users/password_reset_complete.html'
 
-
 class UserRegisterView(CreateView):
-    """Представление для регистрации новых пользователей."""
-
     form_class = UserRegisterForm
-    template_name = "users/register.html"
+    template_name = "users/signup.html"
     success_url = reverse_lazy("landing")
 
     def dispatch(self, request, *args, **kwargs):
-        """Перенаправляет аутентифицированных пользователей на главную страницу."""
         if request.user.is_authenticated:
             return redirect("landing")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        """Обрабатывает валидную форму: сохраняет пользователя и выполняет автоматический вход."""
-        response = super().form_valid(form)
-        user = form.save()  # Получаем сохраненного пользователя из формы
-        login(self.request, user)
-        messages.success(
+        user = form.save()
+        # Автоматический вход через allauth с отключением встроенного flash_message
+        perform_login(
             self.request,
-            f"Добро пожаловать, {user.username}! Регистрация прошла успешно.",
+            user,
+            email_verification=settings.ACCOUNT_EMAIL_VERIFICATION,
+            redirect_url=str(self.success_url)
         )
-        return response
+        return redirect(self.success_url)
 
     def form_invalid(self, form):
-        """Обрабатывает невалидную форму: выводит сообщение об ошибке."""
         messages.error(
             self.request, "Пожалуйста, исправьте ошибки в форме регистрации."
         )
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
-        """Добавляет заголовок страницы в контекст."""
         context = super().get_context_data(**kwargs)
         context["title"] = "Регистрация"
         return context
-
 
 class UserLoginView(LoginView):
     """Представление для аутентификации пользователей."""
@@ -135,7 +129,7 @@ class UserProfileDetailView(LoginRequiredMixin, DetailView):
 class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     """Представление для смены пароля пользователя."""
 
-    template_name = "users/password_change_form.html"
+    template_name = "users/password_change.html"
     form_class = UserPasswordChangeForm
 
     def get_success_url(self):

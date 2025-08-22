@@ -1,6 +1,6 @@
 import os
 import logging
-import telegram # pip install python-telegram-bot
+import telegram 
 import asyncio
 from dotenv import load_dotenv
 # Загрузка переменных окружения из .env файла

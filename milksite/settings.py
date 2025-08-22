@@ -48,6 +48,12 @@ INSTALLED_APPS = [
     'core',
     'users.apps.UsersConfig',
     'blog',
+    'django.contrib.sites',
+
+    # django-allauth
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",  # подтверждение через соц.сети
 ]
 
 MIDDLEWARE = [
@@ -56,6 +62,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -173,3 +180,20 @@ TELEGRAM_USER_ID = os.getenv("TELEGRAM_USER_ID")
 AUTH_USER_MODEL = 'users.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',  # allauth
+]
+
+SITE_ID = 1
+
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"  # можно по username или email
+ACCOUNT_USERNAME_REQUIRED = True                  # требовать username при регистрации
+ACCOUNT_EMAIL_REQUIRED = True                     # требовать email при регистрации
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"          # email нужно подтверждать (можно "optional" или "none")
+
+
+# Чтобы красивее выглядела форма входа
+LOGIN_REDIRECT_URL = "landing"   # куда перенаправлять после входа
+LOGOUT_REDIRECT_URL = "landing"  # куда перенаправлять после выхода

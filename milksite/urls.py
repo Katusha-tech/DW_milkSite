@@ -11,6 +11,7 @@ urlpatterns = [
     path('milksite/', include('core.urls')),
     path('users/', include('users.urls')),
     path('blog/', include('blog.urls')),
+    path('users/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

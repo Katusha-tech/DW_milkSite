@@ -82,6 +82,30 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-allauth"
+version = "65.11.0"
+description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_allauth-65.11.0.tar.gz", hash = "sha256:d08ee0b60a1a54f84720bb749518628c517c9af40b6cfb3bc980206e182745ab"},
+]
+
+[package.dependencies]
+asgiref = ">=3.8.1"
+Django = ">=4.2.16"
+
+[package.extras]
+headless-spec = ["PyYAML (>=6,<7)"]
+idp-oidc = ["oauthlib (>=3.3.0,<4)", "pyjwt[crypto] (>=2.0,<3)"]
+mfa = ["fido2 (>=1.1.2,<3)", "qrcode (>=7.0.0,<9)"]
+openid = ["python3-openid (>=3.0.8,<4)"]
+saml = ["python3-saml (>=1.15.0,<2.0.0)"]
+socialaccount = ["oauthlib (>=3.3.0,<4)", "pyjwt[crypto] (>=2.0,<3)", "requests (>=2.0.0,<3)"]
+steam = ["python3-openid (>=3.0.8,<4)"]
+
+[[package]]
 name = "django-extensions"
 version = "4.1"
 description = "Extensions for Django"
@@ -634,4 +658,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "a3ea7762e48bbaff685933e42aa4fe12705f55aa562c5dd9f0721ba4ade82edf"
+content-hash = "f25a6b299920d080e959e91bd1b04588af0f6e637bfdba9444867c0e3288a42f"
