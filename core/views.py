@@ -36,6 +36,8 @@ class StaffRequiredMixin(UserPassesTestMixin):
         messages.error(self.request, "У вас нет доступа к этому разделу.")
         return redirect("landing")
     
+class Custom404View(TemplateView):
+    template_name = '404.html'
 
 
 class LandingView(TemplateView):

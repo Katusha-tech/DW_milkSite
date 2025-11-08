@@ -1,7 +1,8 @@
 # core/urls.py
 from django.contrib import admin
 from django.urls import path
-from .views import (ThanksView, 
+from .views import (Custom404View,
+                    ThanksView, 
                     ProductListView,
                     ProductsDetailView,
                     OrdersListView, 
@@ -16,6 +17,7 @@ from .views import (ThanksView,
 
 # Маршруты доступны с префиксом /milksite/
 urlpatterns = [
+    path('test-404/', Custom404View.as_view(), name='test-404'),
     path('thanks/', ThanksView.as_view(), name='thanks'),
     path('thanks/<str:source>/', ThanksView.as_view(), name='thanks_with_source'),
     path('orders/', OrdersListView.as_view(), name='orders_list'),

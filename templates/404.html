@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница не найдена — МОЛОКО&ДОМ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body class="err-body">
+
+<div class="err-container">
+    <div class="err-image-wrapper">
+        <img src="{% static 'img/test404.png' %}" alt="404" class="err-image">
+    </div>
+
+    <div class="err-overlay">
+        <h2 class="err-title">Мы пока поищем страницу, а вы выберете молоко</h2>
+        <div class="err-buttons">
+            <a href="{% url 'landing' %}" class="err-btn">На главную</a>
+            <a href="{% url 'products' %}" class="err-btn">В каталог</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+
