@@ -12,3 +12,4 @@ db.sqlite3-wal
 db.sqlite3-shm
 Microsoft/
 pip/
+all_data.json 
